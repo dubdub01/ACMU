@@ -1,10 +1,16 @@
 import { NextResponse } from 'next/server';
-import { verifyCredentials, createSession } from '@/lib/auth';
-import { promises as fs } from 'fs';
+import { appendFileSync, promises as fs } from 'fs';
 import path from 'path';
 
 // Répertoire de l'app (écriture garantie) plutôt que HOME (souvent absent ou read-only sous Passenger)
 const LOG_FILE = path.join(process.cwd(), 'login-error.log');
+
+// Log au chargement du module (auth importé plus bas en dynamique) pour savoir si la route est atteinte
+try {
+  appendFileSync(LOG_FILE, `[${new Date().toISOString()}] login route module loaded\n`, 'utf8');
+} catch {
+  // ignore
+}
 
 async function logLoginError(message: string, error: unknown) {
   try {
@@ -33,6 +39,8 @@ export async function POST(request: Request) {
       );
     }
 
+    // Import dynamique pour que l'erreur éventuelle (ex: Prisma) soit loguée dans notre catch
+    const { verifyCredentials, createSession } = await import('@/lib/auth');
     const user = await verifyCredentials(email, password);
     if (!user) {
       return NextResponse.json(
