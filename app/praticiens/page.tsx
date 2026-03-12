@@ -1,30 +1,35 @@
 import { prisma } from '@/lib/prisma';
 import PraticienCard from '@/app/components/PraticienCard';
 
-export const dynamic = 'force-dynamic';
-
 export const metadata = {
   title: 'Nos praticiens - Centre médical ACMU',
   description: 'Découvrez notre équipe de praticiens qualifiés au centre médical ACMU.',
 };
 
 export default async function Praticiens() {
-  // Charger les praticiens depuis la base de données (avec le champ photo)
-  const praticiens = await prisma.praticien.findMany({
-    orderBy: { nom: 'asc' },
-    select: {
-      id: true,
-      nom: true,
-      titre: true,
-      specialite: true,
-      description: true,
-      details: true,
-      photo: true,
-      tel: true,
-      email: true,
-      urlRdv: true,
-    },
-  });
+  let praticiens: any[] = [];
+
+  try {
+    praticiens = await prisma.praticien.findMany({
+      orderBy: { nom: 'asc' },
+      select: {
+        id: true,
+        nom: true,
+        titre: true,
+        specialite: true,
+        description: true,
+        details: true,
+        photo: true,
+        tel: true,
+        email: true,
+        urlRdv: true,
+      },
+    });
+  } catch (error) {
+    console.error('Erreur lors du chargement des praticiens', error);
+    // On laisse le tableau vide pour éviter l'erreur 500 côté client.
+    praticiens = [];
+  }
 
   return (
     <div className="min-h-screen py-16 bg-white">
