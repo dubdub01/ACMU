@@ -1,5 +1,20 @@
 import { NextResponse } from 'next/server';
 import { verifyCredentials, createSession } from '@/lib/auth';
+import { promises as fs } from 'fs';
+
+async function logLoginError(message: string, error: unknown) {
+  try {
+    const ts = new Date().toISOString();
+    const details =
+      error instanceof Error
+        ? `${error.name}: ${error.message}\n${error.stack ?? ''}`
+        : String(error);
+    const line = `[${ts}] ${message}\n${details}\n\n`;
+    await fs.appendFile('./login-error.log', line, 'utf8');
+  } catch {
+    // on ignore les erreurs de log pour ne pas casser la route
+  }
+}
 
 export async function POST(request: Request) {
   try {
@@ -33,9 +48,10 @@ export async function POST(request: Request) {
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    console.error('Erreur login:', message, error);
+    console.error('Erreur login:', message);
+    await logLoginError('Erreur login', error);
     return NextResponse.json(
-      { success: false, error: 'Erreur lors de la connexion', details: message },
+      { success: false, error: 'Erreur lors de la connexion' },
       { status: 500 }
     );
   }
