@@ -1,31 +1,63 @@
-import { PrismaClient } from '@prisma/client'
-import { PrismaPg } from '@prisma/adapter-pg'
-import { Pool } from 'pg'
+import { PrismaClient } from '@prisma/client';
+import { PrismaPg } from '@prisma/adapter-pg';
+import { Pool } from 'pg';
 
-// Explication : 
-// On crée une seule instance de PrismaClient pour toute l'application
-// En développement, on évite de créer trop d'instances (limite de connexions)
-// Avec Prisma 7, il faut utiliser un adapter pour PostgreSQL
+// Explication :
+// - En développement, on utilise Prisma normalement avec PostgreSQL.
+// - En production sur certains hébergements (comme O2Switch), le moteur WebAssembly
+//   de Prisma peut manquer de mémoire. Pour éviter les erreurs 500,
+//   on propose un mode "démo" qui retourne des données vides sans se connecter à la DB.
 
 const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClient | undefined
+  prisma: PrismaClient | undefined;
+};
+
+const isDemoMode = process.env.PRISMA_DEMO_MODE === '1';
+
+function createRealPrismaClient() {
+  const pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+  });
+
+  const adapter = new PrismaPg(pool);
+
+  return (
+    globalForPrisma.prisma ??
+    new PrismaClient({
+      adapter,
+      // log: ['query', 'error', 'warn'],
+    })
+  );
 }
 
-// Créer le pool de connexions PostgreSQL
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-})
+function createDemoPrismaClient() {
+  // Client minimal pour le mode démo (pas de connexion DB réelle)
+  return {
+    praticien: {
+      findMany: async () => [],
+      findUnique: async () => null,
+      create: async () => {
+        throw new Error('Mode démo: création de praticien désactivée.');
+      },
+      update: async () => {
+        throw new Error('Mode démo: modification de praticien désactivée.');
+      },
+      delete: async () => {
+        throw new Error('Mode démo: suppression de praticien désactivée.');
+      },
+    },
+    user: {
+      findUnique: async () => null,
+      create: async () => {
+        throw new Error('Mode démo: création d’utilisateur désactivée.');
+      },
+    },
+  } as unknown as PrismaClient;
+}
 
-// Créer l'adapter PostgreSQL
-const adapter = new PrismaPg(pool)
+export const prisma = isDemoMode ? createDemoPrismaClient() : createRealPrismaClient();
 
-export const prisma =
-  globalForPrisma.prisma ??
-  new PrismaClient({
-    adapter,
-    // Optionnel : afficher les requêtes SQL en développement
-    // log: ['query', 'error', 'warn'],
-  })
+if (!isDemoMode && process.env.NODE_ENV !== 'production') {
+  globalForPrisma.prisma = prisma;
+}
 
-// En développement, on garde l'instance dans globalThis pour éviter les reconnexions
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
