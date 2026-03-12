@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import { verifyCredentials, createSession } from '@/lib/auth';
 import { promises as fs } from 'fs';
+import path from 'path';
+
+const LOG_FILE = path.join(process.env.HOME || process.cwd(), 'login-error.log');
 
 async function logLoginError(message: string, error: unknown) {
   try {
@@ -10,7 +13,7 @@ async function logLoginError(message: string, error: unknown) {
         ? `${error.name}: ${error.message}\n${error.stack ?? ''}`
         : String(error);
     const line = `[${ts}] ${message}\n${details}\n\n`;
-    await fs.appendFile('./login-error.log', line, 'utf8');
+    await fs.appendFile(LOG_FILE, line, 'utf8');
   } catch {
     // on ignore les erreurs de log pour ne pas casser la route
   }
@@ -18,6 +21,7 @@ async function logLoginError(message: string, error: unknown) {
 
 export async function POST(request: Request) {
   try {
+    await logLoginError('POST /api/auth/login reçu', { cwd: process.cwd(), home: process.env.HOME });
     const body = await request.json();
     const { email, password } = body;
 
