@@ -6,8 +6,6 @@
 import { config } from 'dotenv';
 import { resolve } from 'path';
 import { PrismaClient } from '@prisma/client';
-import { PrismaPg } from '@prisma/adapter-pg';
-import { Pool } from 'pg';
 import bcrypt from 'bcryptjs';
 
 // Charger les variables d'environnement depuis .env.local
@@ -24,12 +22,7 @@ if (!process.env.DATABASE_URL) {
   process.exit(1);
 }
 
-// Créer le pool PostgreSQL et l'adapter pour le script
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-});
-const adapter = new PrismaPg(pool);
-const prisma = new PrismaClient({ adapter });
+const prisma = new PrismaClient();
 
 async function main() {
   const email = process.argv[2];

@@ -1,0 +1,15 @@
+{
+  "headers": {
+    "x-nextjs-stale-time": "300",
+    "x-nextjs-prerender": "1",
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/praticiens/layout,_N_T_/praticiens/page,_N_T_/praticiens"
+  },
+  "segmentPaths": [
+    "/_tree",
+    "/_full",
+    "/praticiens/__PAGE__",
+    "/praticiens",
+    "/_index",
+    "/_head"
+  ]
+}

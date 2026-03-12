@@ -1,6 +1,5 @@
 var R=require("../../chunks/ssr/[turbopack]_runtime.js")("server/app/test-prisma/page.js")
-R.c("server/chunks/ssr/[root-of-the-server]__498ffa2e._.js")
-R.c("server/chunks/ssr/_815d64d5._.js")
+R.c("server/chunks/ssr/[root-of-the-server]__e03dea62._.js")
 R.c("server/chunks/ssr/_6139f1ce._.js")
 R.c("server/chunks/ssr/_b48f75e7._.js")
 R.c("server/chunks/ssr/[root-of-the-server]__1de4c4d8._.js")
