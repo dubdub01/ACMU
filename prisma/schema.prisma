@@ -1,0 +1,40 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// Modèle User - pour l'authentification admin
+model User {
+  id        String   @id @default(uuid()) // Identifiant unique (UUID)
+  email     String   @unique // Email de connexion (unique)
+  password  String   // Mot de passe hashé (bcrypt)
+  name      String?  // Nom de l'administrateur (optionnel)
+  createdAt DateTime @default(now()) // Date de création
+  updatedAt DateTime @updatedAt // Date de dernière modification
+
+  @@map("users") // Nom de la table dans PostgreSQL
+}
+
+// Modèle Praticien - représente un praticien du centre médical
+model Praticien {
+  id          String   @id @default(uuid()) // Identifiant unique (UUID)
+  nom         String   // Nom du praticien (ex: "Dr. Dupont")
+  titre       String   // Titre professionnel (ex: "Médecin généraliste")
+  specialite  String?  // Spécialité (optionnel, ex: "Cardiologie")
+  description String?  @db.Text // Description courte (aperçu sur la carte)
+  details     String?  @db.Text // Texte long \"En savoir plus\" (popup)
+  photo       String?  // Chemin vers la photo (optionnel, ex: "/images/praticiens/dupont.jpg")
+  tel         String?  // Numéro de téléphone du praticien ou du secrétariat (optionnel)
+  email       String?  // Adresse email de contact du praticien (optionnel)
+  urlRdv      String?  // URL de prise de rendez-vous Mobminder (optionnel)
+  createdAt   DateTime @default(now()) // Date de création
+  updatedAt   DateTime @updatedAt // Date de dernière modification
+
+  @@map("praticiens") // Nom de la table dans PostgreSQL
+}

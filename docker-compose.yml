@@ -1,0 +1,68 @@
+services:
+  # Service Next.js pour le développement
+  nextjs:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: acmu-nextjs-dev
+    ports:
+      - "3000:3000"
+    volumes:
+      # Monter le code source pour le hot-reload
+      - .:/app
+      # Exclure node_modules du volume (utiliser ceux du conteneur)
+      - /app/node_modules
+      - /app/.next
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=postgresql://acmu_user:acmu_password@postgres:5432/acmu_db
+      - NEXTAUTH_URL=http://localhost:3000
+      - NEXTAUTH_SECRET=dev-secret-change-in-production
+    depends_on:
+      - postgres
+    restart: unless-stopped
+    networks:
+      - acmu-network
+
+  # Base de données PostgreSQL pour le développement
+  postgres:
+    image: postgres:15-alpine
+    container_name: acmu-postgres-dev
+    environment:
+      - POSTGRES_DB=acmu_db
+      - POSTGRES_USER=acmu_user
+      - POSTGRES_PASSWORD=acmu_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - acmu-network
+
+  # Optionnel : pgAdmin pour gérer la base de données (interface web)
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: acmu-pgadmin-dev
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@example.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - postgres
+    restart: unless-stopped
+    networks:
+      - acmu-network
+
+volumes:
+  postgres_data:
+    driver: local
+  pgadmin_data:
+    driver: local
+
+networks:
+  acmu-network:
+    driver: bridge

@@ -1,0 +1,48 @@
+# Dépendances
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build Next.js
+.next
+out
+dist
+
+# Fichiers de développement
+.env*.local
+.env.development
+.env.test
+
+# Fichiers système
+.DS_Store
+*.pem
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# Git
+.git
+.gitignore
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Logs
+logs
+*.log
+
+# Base de données locale (si SQLite)
+*.db
+*.sqlite
+*.sqlite3
+
+# Autres
+coverage
+.nyc_output
