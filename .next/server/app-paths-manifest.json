@@ -1,0 +1,23 @@
+{
+  "/_global-error/page": "app/_global-error/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/admin/login/page": "app/admin/login/page.js",
+  "/admin/page": "app/admin/page.js",
+  "/admin/praticiens/[id]/page": "app/admin/praticiens/[id]/page.js",
+  "/admin/praticiens/nouveau/page": "app/admin/praticiens/nouveau/page.js",
+  "/api/auth/login/route": "app/api/auth/login/route.js",
+  "/api/auth/logout/route": "app/api/auth/logout/route.js",
+  "/api/auth/me/route": "app/api/auth/me/route.js",
+  "/api/praticiens/[id]/route": "app/api/praticiens/[id]/route.js",
+  "/api/praticiens/route": "app/api/praticiens/route.js",
+  "/api/upload/image/route": "app/api/upload/image/route.js",
+  "/contact/page": "app/contact/page.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/histoire/page": "app/histoire/page.js",
+  "/page": "app/page.js",
+  "/praticiens/page": "app/praticiens/page.js",
+  "/recrutement/page": "app/recrutement/page.js",
+  "/robots.txt/route": "app/robots.txt/route.js",
+  "/services/page": "app/services/page.js",
+  "/test-prisma/page": "app/test-prisma/page.js"
+}

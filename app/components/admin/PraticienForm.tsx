@@ -11,7 +11,10 @@ interface Praticien {
   titre: string;
   specialite: string | null;
   description: string | null;
+  details: string | null;
   photo: string | null;
+  tel: string | null;
+  email: string | null;
   urlRdv: string | null;
 }
 

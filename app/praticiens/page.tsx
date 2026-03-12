@@ -1,6 +1,8 @@
 import { prisma } from '@/lib/prisma';
 import PraticienCard from '@/app/components/PraticienCard';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: 'Nos praticiens - Centre médical ACMU',
   description: 'Découvrez notre équipe de praticiens qualifiés au centre médical ACMU.',
