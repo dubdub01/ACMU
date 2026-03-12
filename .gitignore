@@ -9,12 +9,9 @@
 # testing
 /coverage
 
-# next.js
-/.next/
+# next.js (on accepte de committer le build pour le déploiement o2switch)
 /out/
 
-# production
-/build
 
 # misc
 .DS_Store
