@@ -3,7 +3,8 @@ import { verifyCredentials, createSession } from '@/lib/auth';
 import { promises as fs } from 'fs';
 import path from 'path';
 
-const LOG_FILE = path.join(process.env.HOME || process.cwd(), 'login-error.log');
+// Répertoire de l'app (écriture garantie) plutôt que HOME (souvent absent ou read-only sous Passenger)
+const LOG_FILE = path.join(process.cwd(), 'login-error.log');
 
 async function logLoginError(message: string, error: unknown) {
   try {
