@@ -32,9 +32,10 @@ export async function POST(request: Request) {
       },
     });
   } catch (error) {
-    console.error('Erreur login:', error);
+    const message = error instanceof Error ? error.message : String(error);
+    console.error('Erreur login:', message, error);
     return NextResponse.json(
-      { success: false, error: 'Erreur lors de la connexion' },
+      { success: false, error: 'Erreur lors de la connexion', details: message },
       { status: 500 }
     );
   }

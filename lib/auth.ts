@@ -75,22 +75,27 @@ export async function verifyCredentials(
   email: string,
   password: string
 ): Promise<SessionUser | null> {
-  const user = await prisma.user.findUnique({
-    where: { email },
-  });
+  try {
+    const user = await prisma.user.findUnique({
+      where: { email },
+    });
 
-  if (!user) {
-    return null;
+    if (!user || !user.password) {
+      return null;
+    }
+
+    const isValid = await bcrypt.compare(password, user.password);
+    if (!isValid) {
+      return null;
+    }
+
+    return {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+    };
+  } catch (err) {
+    console.error('verifyCredentials error:', err);
+    throw err;
   }
-
-  const isValid = await bcrypt.compare(password, user.password);
-  if (!isValid) {
-    return null;
-  }
-
-  return {
-    id: user.id,
-    email: user.email,
-    name: user.name,
-  };
 }
