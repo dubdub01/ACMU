@@ -241,19 +241,16 @@ Le dépôt contient deux workflows dans `.github/workflows/` :
 | Workflow | Rôle | Déclencheur |
 |----------|------|-------------|
 | `ci.yml` | `npm ci`, lint, `prisma generate`, `next build` | Chaque push/PR sur `main` |
-| `deploy-o2switch.yml` | SSH → `git pull`, build, migrations | Après CI réussie sur `main` (si activé) |
+| `deploy-o2switch-ftps.yml` | Build GitHub + envoi **FTPS** (port 21) | Après CI réussie sur `main` |
+| `deploy-o2switch.yml` | SSH — **désactivé** (IP filtrées par o2switch) | — |
 
 ### Activer le déploiement automatique
 
-1. Sur o2switch : clone du repo dans `~/nodejs-apps/acmu` (ou autre chemin).
-2. GitHub → **Settings** → **Secrets and variables** → **Actions** :
-   - **Secrets** : `O2SWITCH_SSH_HOST`, `O2SWITCH_SSH_USER`, `O2SWITCH_SSH_PRIVATE_KEY` (clé privée SSH, contenu du fichier `id_ed25519` sans mot de passe, ou clé dédiée).
-   - **Variables** : `O2SWITCH_DEPLOY` = `true`
-   - **Variables** (optionnel) : `O2SWITCH_APP_PATH` = `/home/votrecompte/nodejs-apps/acmu`
-3. Les variables d'environnement (`DATABASE_URL`, etc.) restent dans le **cPanel Node.js**, pas dans GitHub.
-4. Onglet **Actions** du dépôt : vérifier que la CI est verte après un `git push`.
+**Secrets FTPS** (cours) : `SFTP_SERVER`, `SFTP_USERNAME`, `SFTP_PASSWORD` (mot de passe FTP cPanel).
 
-Déploiement manuel sans attendre un push : **Actions** → **Deploy o2switch** → **Run workflow**.
+**Variables** : `O2SWITCH_DEPLOY` = `true` | `O2SWITCH_FTP_DIR` = `nodejs-apps/acmu/`
+
+**Actions** → **Deploy o2switch (FTPS)**. Après upload : depuis WSL, `npm ci --omit=dev` sur le serveur puis redémarrer Node.js dans le cPanel.
 
 ### Dépannage deploy GitHub Actions
 
