@@ -59,6 +59,7 @@ jobs:
             echo "npm=$(npm -v 2>/dev/null || echo absent)"
 
             APP_DIR="${{ vars.O2SWITCH_APP_PATH }}"
+            APP_DIR="$(printf '%s' "$APP_DIR" | tr -d '\r\n' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
             if [ -z "$APP_DIR" ]; then
               APP_DIR="$HOME/nodejs-apps/acmu"
             fi

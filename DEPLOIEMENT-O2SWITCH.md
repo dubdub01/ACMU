@@ -255,6 +255,24 @@ Le dépôt contient deux workflows dans `.github/workflows/` :
 
 Déploiement manuel sans attendre un push : **Actions** → **Deploy o2switch** → **Run workflow**.
 
+### Dépannage deploy GitHub Actions
+
+**`ssh.ParsePrivateKey: ssh: no key found`** — le secret `O2SWITCH_SSH_PRIVATE_KEY` est vide ou mal collé. Recréez-le :
+
+```bash
+cat ~/.ssh/id_ed25519
+```
+
+Copiez tout le bloc `-----BEGIN ... END-----` sans ligne vide avant/après. Ne mettez pas le fichier `.pub`.
+
+**`APP_DIR` avec retour à la ligne** — dans la variable `O2SWITCH_APP_PATH`, supprimez tout saut de ligne en fin de valeur (une seule ligne : `/home/vsup3936/nodejs-apps/acmu`).
+
+**`dial tcp ...:22: i/o timeout`** — connexion SSH depuis les serveurs GitHub bloquée ou trop lente (fréquent en mutualisé). La clé locale fonctionne, mais pas toujours les IP GitHub. Solutions :
+
+1. Réessayer après correction de la clé (parfois la timeout suit une mauvaise clé).
+2. Déployer à la main en SSH : `cd ~/nodejs-apps/acmu && git pull && npm ci && npm run build`
+3. Demander à o2switch si le SSH depuis l’extérieur (CI) est autorisé sur votre offre.
+
 ## Support O2Switch
 
 En cas de problème technique avec l'hébergement, contactez le support O2Switch qui pourra vous aider avec la configuration Phusion Passenger.
