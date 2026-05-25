@@ -50,11 +50,12 @@ export default function Home() {
             {/* Image principale */}
             <div className="relative h-[400px] lg:h-[500px] rounded-2xl overflow-hidden shadow-2xl border-4 border-white/30">
               <Image
-                src="/images/hero/centre-medical.jpg"
-                alt="Centre médical ACMU - Uccle"
+                src="/images/hero/accueil-reception.jpg"
+                alt="Accueil du centre médical ACMU - réception à Uccle"
                 fill
-                className="object-cover"
+                className="object-cover object-center"
                 priority
+                sizes="(max-width: 1024px) 100vw, 50vw"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#479983]/20 to-transparent"></div>
             </div>
