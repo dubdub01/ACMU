@@ -48,6 +48,8 @@ jobs:
         run: |
           rm -rf node_modules .git .github
           rm -f .env .env.local .env.*.local
+          mkdir -p tmp
+          date -u +%Y-%m-%dT%H:%M:%SZ > tmp/restart.txt
 
       - name: Déploiement FTPS sur o2switch
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
