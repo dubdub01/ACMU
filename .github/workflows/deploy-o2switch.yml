@@ -1,7 +1,6 @@
 # Déploiement SSH vers o2switch (après CI verte sur main).
-# Activer : Settings → Secrets and variables → Actions → Variables → O2SWITCH_DEPLOY = true
 # Secrets : O2SWITCH_SSH_HOST, O2SWITCH_SSH_USER, O2SWITCH_SSH_PRIVATE_KEY
-# Optionnel : O2SWITCH_APP_PATH (défaut ~/nodejs-apps/acmu)
+# Variables : O2SWITCH_DEPLOY = true | O2SWITCH_APP_PATH (optionnel)
 
 name: Deploy o2switch
 
@@ -27,16 +26,47 @@ jobs:
           host: ${{ secrets.O2SWITCH_SSH_HOST }}
           username: ${{ secrets.O2SWITCH_SSH_USER }}
           key: ${{ secrets.O2SWITCH_SSH_PRIVATE_KEY }}
+          port: 22
+          timeout: 120s
+          command_timeout: 25m
+          debug: true
           script_stop: true
           script: |
-            set -euo pipefail
+            set -euxo pipefail
+            echo "=== Connexion SSH OK ==="
+            whoami
+            hostname
+            command -v git || { echo "ERREUR: git absent"; exit 1; }
+            command -v npm || { echo "ERREUR: npm absent — activez Node.js dans le cPanel"; exit 1; }
+
             APP_DIR="${{ vars.O2SWITCH_APP_PATH }}"
-            if [ -z "$APP_DIR" ]; then APP_DIR="$HOME/nodejs-apps/acmu"; fi
+            if [ -z "$APP_DIR" ]; then
+              APP_DIR="$HOME/nodejs-apps/acmu"
+            fi
+            echo "APP_DIR=$APP_DIR"
+
+            if [ ! -d "$APP_DIR" ]; then
+              echo "ERREUR: dossier introuvable: $APP_DIR"
+              echo "Contenu de HOME:"
+              ls -la "$HOME" || true
+              echo "Créez le dossier et clonez le repo, ou définissez la variable O2SWITCH_APP_PATH."
+              exit 1
+            fi
+
             cd "$APP_DIR"
+
+            if [ ! -d .git ]; then
+              echo "ERREUR: pas de dépôt Git dans $APP_DIR"
+              ls -la
+              exit 1
+            fi
+
+            git remote -v
             git fetch origin main
             git reset --hard origin/main
             npm ci
             npx prisma generate
             npm run build
             npx prisma migrate deploy || true
-            echo "Déploiement terminé. Redémarrez l'app Node.js dans le cPanel si nécessaire."
+            echo "=== Déploiement terminé ==="
+            echo "Redémarrez l'app Node.js dans le cPanel si nécessaire."
