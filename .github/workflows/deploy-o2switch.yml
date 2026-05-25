@@ -1,113 +1,15 @@
-# Déploiement SSH vers o2switch (après CI verte sur main).
-# Secrets : O2SWITCH_SSH_HOST, O2SWITCH_SSH_USER, O2SWITCH_SSH_PRIVATE_KEY
-# Variables : O2SWITCH_DEPLOY = true | O2SWITCH_APP_PATH (optionnel)
+# DÉSACTIVÉ — o2switch filtre le SSH (port 22) par adresse IP.
+# Les runners GitHub ne peuvent pas s'y connecter (timeout / no key).
+# Utilisez : Deploy o2switch (FTPS)
 
-name: Deploy o2switch
+name: Deploy o2switch (SSH — désactivé)
 
 on:
-  workflow_run:
-    workflows: [CI]
-    types: [completed]
-    branches: [main]
   workflow_dispatch:
 
 jobs:
-  deploy:
-    if: >
-      (github.event_name == 'workflow_dispatch' ||
-       (github.event.workflow_run.conclusion == 'success' &&
-        github.event.workflow_run.head_branch == 'main')) &&
-      vars.O2SWITCH_DEPLOY == 'true'
+  disabled:
+    if: false
     runs-on: ubuntu-latest
     steps:
-      - name: Déploiement SSH
-        uses: appleboy/ssh-action@v1.2.0
-        with:
-          host: ${{ secrets.O2SWITCH_SSH_HOST }}
-          username: ${{ secrets.O2SWITCH_SSH_USER }}
-          key: ${{ secrets.O2SWITCH_SSH_PRIVATE_KEY }}
-          port: 22
-          timeout: 120s
-          command_timeout: 25m
-          debug: true
-          script_stop: true
-          script: |
-            set -euxo pipefail
-            echo "=== Connexion SSH OK ==="
-            whoami
-            hostname
-
-            [ -f "$HOME/.bashrc" ] && . "$HOME/.bashrc" || true
-            [ -f "$HOME/.profile" ] && . "$HOME/.profile" || true
-
-            if ! command -v npm >/dev/null 2>&1; then
-              NPM_BIN="$(find "$HOME/nodevenv" -type f -name npm 2>/dev/null | head -1 || true)"
-              if [ -n "$NPM_BIN" ]; then
-                export PATH="$(dirname "$NPM_BIN"):$PATH"
-                echo "npm trouvé via nodevenv: $(command -v npm)"
-              fi
-            fi
-
-            command -v git || { echo "ERREUR: git absent"; exit 1; }
-            command -v npm || {
-              echo "ERREUR: npm absent. Créez l'app Node.js dans le cPanel (nodejs-apps/acmu)."
-              find "$HOME/nodevenv" -maxdepth 4 -type d 2>/dev/null | head -20 || true
-              exit 1
-            }
-
-            echo "node=$(node -v 2>/dev/null || echo absent)"
-            echo "npm=$(npm -v 2>/dev/null || echo absent)"
-
-            APP_DIR="${{ vars.O2SWITCH_APP_PATH }}"
-            APP_DIR="$(printf '%s' "$APP_DIR" | tr -d '\r\n' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
-            if [ -z "$APP_DIR" ]; then
-              APP_DIR="$HOME/nodejs-apps/acmu"
-            fi
-            echo "APP_DIR=$APP_DIR"
-
-            if [ ! -d "$APP_DIR" ]; then
-              echo "ERREUR: dossier introuvable: $APP_DIR"
-              ls -la "$HOME" || true
-              exit 1
-            fi
-
-            cd "$APP_DIR"
-
-            if [ ! -d .git ]; then
-              echo "ERREUR: pas de dépôt Git. Exécutez: git clone https://github.com/dubdub01/ACMU.git ."
-              ls -la
-              exit 1
-            fi
-
-            if [ ! -f package.json ]; then
-              echo "ERREUR: package.json absent dans $APP_DIR"
-              exit 1
-            fi
-
-            if [ -f .env ]; then set -a; . ./.env; set +a; echo "Chargé: .env"; fi
-            if [ -f .env.local ]; then set -a; . ./.env.local; set +a; echo "Chargé: .env.local"; fi
-
-            export DATABASE_URL="${DATABASE_URL:-postgresql://build:build@127.0.0.1:5432/build}"
-            export NEXTAUTH_URL="${NEXTAUTH_URL:-https://acmu.be}"
-            export NEXTAUTH_SECRET="${NEXTAUTH_SECRET:-deploy-build-secret-32chars-min}"
-
-            echo "=== Git pull ==="
-            git remote -v
-            git fetch origin main
-            git reset --hard origin/main
-
-            echo "=== npm ci ==="
-            npm ci
-
-            echo "=== prisma generate ==="
-            npx prisma generate
-
-            echo "=== next build ==="
-            export NEXT_PRIVATE_DISABLE_RUST_COMPILER=1
-            npm run build
-
-            echo "=== prisma migrate (non bloquant) ==="
-            npx prisma migrate deploy || echo "AVERTISSEMENT: migrate deploy a échoué (DB ou droits)"
-
-            echo "=== Déploiement terminé ==="
-            echo "Redémarrez l'app Node.js dans le cPanel."
+      - run: echo "Utilisez le workflow Deploy o2switch (FTPS)"

@@ -1,0 +1,69 @@
+# Déploiement o2switch via FTPS (port 21) — compatible filtrage IP o2switch.
+# Le SSH (port 22) depuis GitHub Actions est en général bloqué ; le FTPS fonctionne.
+#
+# Secrets (comme le cours) :
+#   SFTP_SERVER, SFTP_USERNAME, SFTP_PASSWORD
+# Variable : O2SWITCH_DEPLOY = true
+# Variable optionnelle : O2SWITCH_FTP_DIR (ex. nodejs-apps/acmu/)
+
+name: Deploy o2switch (FTPS)
+
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build-and-upload:
+    if: >
+      (github.event_name == 'workflow_dispatch' ||
+       (github.event.workflow_run.conclusion == 'success' &&
+        github.event.workflow_run.head_branch == 'main')) &&
+      vars.O2SWITCH_DEPLOY == 'true'
+    runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: postgresql://build:build@127.0.0.1:5432/build
+      NEXTAUTH_URL: https://acmu.be
+      NEXTAUTH_SECRET: deploy-build-secret-32chars-min
+      NEXT_PRIVATE_DISABLE_RUST_COMPILER: "1"
+    steps:
+      - name: Récupération du code
+        uses: actions/checkout@v4
+
+      - name: Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Installation et build
+        run: |
+          npm ci
+          npx prisma generate
+          npm run build
+
+      - name: Nettoyage avant envoi FTP
+        run: |
+          rm -rf node_modules .git .github
+          rm -f .env .env.local .env.*.local
+
+      - name: Déploiement FTPS sur o2switch
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.SFTP_SERVER }}
+          username: ${{ secrets.SFTP_USERNAME }}
+          password: ${{ secrets.SFTP_PASSWORD }}
+          port: 21
+          protocol: ftps
+          local-dir: ./
+          server-dir: ./${{ vars.O2SWITCH_FTP_DIR || 'nodejs-apps/acmu/' }}
+          dangerous-clean-slate: false
+          exclude: |
+            **/.git*
+            **/.github/**
+            **/node_modules/**
+            **/.env
+            **/.env.*
+            **/.next/dev/**
