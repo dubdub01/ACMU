@@ -2,8 +2,10 @@ import { NextResponse } from 'next/server';
 import { appendFileSync, promises as fs } from 'fs';
 import path from 'path';
 
-// Répertoire de l'app (écriture garantie) plutôt que HOME (souvent absent ou read-only sous Passenger)
-const LOG_FILE = path.join(process.cwd(), 'login-error.log');
+export const runtime = 'nodejs';
+
+// /tmp est en général inscriptible sur les hébergeurs (Passenger, cPanel)
+const LOG_FILE = path.join('/tmp', 'acmu-login-debug.log');
 
 // Log au chargement du module (auth importé plus bas en dynamique) pour savoir si la route est atteinte
 try {
