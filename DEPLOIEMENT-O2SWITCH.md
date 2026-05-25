@@ -248,7 +248,7 @@ Le dépôt contient deux workflows dans `.github/workflows/` :
 
 **Secrets FTPS** (cours) : `SFTP_SERVER`, `SFTP_USERNAME`, `SFTP_PASSWORD` (mot de passe FTP cPanel).
 
-**Variables** : `O2SWITCH_DEPLOY` = `true` | `O2SWITCH_FTP_DIR` = `nodejs-apps/acmu/`
+**Variables** : `O2SWITCH_DEPLOY` = `true` | `O2SWITCH_FTP_DIR` = `nodejs-apps/acmu/ACMU/` (même chemin que **App Root** dans cPanel Node.js)
 
 **Actions** → **Deploy o2switch (FTPS)**. Après upload : depuis WSL, `npm ci --omit=dev` sur le serveur puis redémarrer Node.js dans le cPanel.
 
