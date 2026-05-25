@@ -11,6 +11,7 @@
 
 # next.js (on accepte de committer le build pour le déploiement o2switch)
 /out/
+.next/dev/
 
 
 # misc
