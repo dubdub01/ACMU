@@ -93,11 +93,8 @@ export default function Footer() {
             <p className="text-[#67e8cc] text-center md:text-left">
               &copy; {new Date().getFullYear()} Centre médical ACMU. Tous droits réservés.
             </p>
-            <div className="flex flex-col gap-1 items-center md:items-end">
+            <div className="flex gap-6">
               <span className="text-white/70 text-sm">Centre médical pluridisciplinaire</span>
-              <span className="text-white/40 text-xs" data-deploy-test="ci-cd">
-                Test deploy auto — {new Date().toISOString().slice(0, 10)}
-              </span>
             </div>
           </div>
         </div>
