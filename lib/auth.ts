@@ -16,8 +16,6 @@ export interface SessionUser {
  */
 export async function createSession(userId: string): Promise<string> {
   const sessionId = crypto.randomUUID();
-  const expiresAt = new Date(Date.now() + SESSION_DURATION);
-  
   // En production, on stockerait la session en base de données
   // Pour simplifier, on utilise juste un cookie signé avec l'ID utilisateur
   const cookieStore = await cookies();
@@ -55,7 +53,7 @@ export async function getCurrentUser(): Promise<SessionUser | null> {
     });
 
     return user;
-  } catch (error) {
+  } catch {
     return null;
   }
 }

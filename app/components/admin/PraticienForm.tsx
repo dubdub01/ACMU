@@ -109,7 +109,7 @@ export default function PraticienForm({ praticien }: PraticienFormProps) {
       }
       
       setUploading(false);
-    } catch (err) {
+    } catch {
       setError('Erreur lors de l\'upload de l\'image');
       setUploading(false);
     }
@@ -188,7 +188,7 @@ export default function PraticienForm({ praticien }: PraticienFormProps) {
 
       router.push('/admin');
       router.refresh();
-    } catch (err) {
+    } catch {
       setError('Erreur lors de la sauvegarde');
       setLoading(false);
     }

@@ -27,7 +27,7 @@ const SPECIALITES = [
 ];
 
 function MarqueeRow({ direction = 'left' }: { direction?: 'left' | 'right' }) {
-  const Card = ({ spec, index }: { spec: typeof SPECIALITES[0]; index: number }) => (
+  const Card = ({ spec }: { spec: (typeof SPECIALITES)[0] }) => (
     <div className="group shrink-0 relative p-6 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border-2 border-transparent hover:border-[#67e8cc] transform hover:-translate-y-1 w-[200px] h-[200px] flex items-center justify-center overflow-hidden bg-white">
       {/* Icône en arrière-plan */}
       <div className="absolute inset-0 flex items-center justify-center opacity-10 group-hover:opacity-15 transition-opacity duration-300">
@@ -54,10 +54,10 @@ function MarqueeRow({ direction = 'left' }: { direction?: 'left' | 'right' }) {
         className={`flex gap-6 shrink-0 ${direction === 'right' ? 'animate-marquee-right' : 'animate-marquee'}`}
       >
         {SPECIALITES.map((spec, i) => (
-          <Card key={`a-${i}`} spec={spec} index={i} />
+          <Card key={`a-${i}`} spec={spec} />
         ))}
         {SPECIALITES.map((spec, i) => (
-          <Card key={`b-${i}`} spec={spec} index={i} />
+          <Card key={`b-${i}`} spec={spec} />
         ))}
       </div>
     </div>

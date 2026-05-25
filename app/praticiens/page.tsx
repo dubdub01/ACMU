@@ -1,5 +1,20 @@
-import { prisma } from '@/lib/prisma';
 import PraticienCard from '@/app/components/PraticienCard';
+import { prisma } from '@/lib/prisma';
+import type { Praticien } from '@prisma/client';
+
+type PraticienListe = Pick<
+  Praticien,
+  | 'id'
+  | 'nom'
+  | 'titre'
+  | 'specialite'
+  | 'description'
+  | 'details'
+  | 'photo'
+  | 'tel'
+  | 'email'
+  | 'urlRdv'
+>;
 
 export const metadata = {
   title: 'Nos praticiens - Centre médical ACMU',
@@ -7,7 +22,7 @@ export const metadata = {
 };
 
 export default async function Praticiens() {
-  let praticiens: any[] = [];
+  let praticiens: PraticienListe[] = [];
 
   try {
     praticiens = await prisma.praticien.findMany({

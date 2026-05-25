@@ -12,7 +12,15 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Entrée Passenger o2switch (CommonJS, require obligatoire)
+    "app.js",
   ]),
+  {
+    rules: {
+      // Textes français avec apostrophes dans le JSX
+      "react/no-unescaped-entities": "off",
+    },
+  },
 ]);
 
 export default eslintConfig;

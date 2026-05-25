@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
@@ -33,7 +34,7 @@ export default function AdminLogin() {
       // Redirection vers le dashboard
       router.push('/admin');
       router.refresh();
-    } catch (err) {
+    } catch {
       setError('Erreur de connexion');
       setLoading(false);
     }
@@ -100,12 +101,12 @@ export default function AdminLogin() {
         </div>
 
         <div className="text-center">
-          <a
+          <Link
             href="/"
             className="text-[#479983] hover:text-[#479983]/80 font-medium"
           >
             ← Retour au site
-          </a>
+          </Link>
         </div>
       </div>
     </div>
