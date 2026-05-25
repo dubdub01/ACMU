@@ -36,8 +36,27 @@ jobs:
             echo "=== Connexion SSH OK ==="
             whoami
             hostname
+
+            [ -f "$HOME/.bashrc" ] && . "$HOME/.bashrc" || true
+            [ -f "$HOME/.profile" ] && . "$HOME/.profile" || true
+
+            if ! command -v npm >/dev/null 2>&1; then
+              NPM_BIN="$(find "$HOME/nodevenv" -type f -name npm 2>/dev/null | head -1 || true)"
+              if [ -n "$NPM_BIN" ]; then
+                export PATH="$(dirname "$NPM_BIN"):$PATH"
+                echo "npm trouvé via nodevenv: $(command -v npm)"
+              fi
+            fi
+
             command -v git || { echo "ERREUR: git absent"; exit 1; }
-            command -v npm || { echo "ERREUR: npm absent — activez Node.js dans le cPanel"; exit 1; }
+            command -v npm || {
+              echo "ERREUR: npm absent. Créez l'app Node.js dans le cPanel (nodejs-apps/acmu)."
+              find "$HOME/nodevenv" -maxdepth 4 -type d 2>/dev/null | head -20 || true
+              exit 1
+            }
+
+            echo "node=$(node -v 2>/dev/null || echo absent)"
+            echo "npm=$(npm -v 2>/dev/null || echo absent)"
 
             APP_DIR="${{ vars.O2SWITCH_APP_PATH }}"
             if [ -z "$APP_DIR" ]; then
@@ -47,26 +66,47 @@ jobs:
 
             if [ ! -d "$APP_DIR" ]; then
               echo "ERREUR: dossier introuvable: $APP_DIR"
-              echo "Contenu de HOME:"
               ls -la "$HOME" || true
-              echo "Créez le dossier et clonez le repo, ou définissez la variable O2SWITCH_APP_PATH."
               exit 1
             fi
 
             cd "$APP_DIR"
 
             if [ ! -d .git ]; then
-              echo "ERREUR: pas de dépôt Git dans $APP_DIR"
+              echo "ERREUR: pas de dépôt Git. Exécutez: git clone https://github.com/dubdub01/ACMU.git ."
               ls -la
               exit 1
             fi
 
+            if [ ! -f package.json ]; then
+              echo "ERREUR: package.json absent dans $APP_DIR"
+              exit 1
+            fi
+
+            if [ -f .env ]; then set -a; . ./.env; set +a; echo "Chargé: .env"; fi
+            if [ -f .env.local ]; then set -a; . ./.env.local; set +a; echo "Chargé: .env.local"; fi
+
+            export DATABASE_URL="${DATABASE_URL:-postgresql://build:build@127.0.0.1:5432/build}"
+            export NEXTAUTH_URL="${NEXTAUTH_URL:-https://acmu.be}"
+            export NEXTAUTH_SECRET="${NEXTAUTH_SECRET:-deploy-build-secret-32chars-min}"
+
+            echo "=== Git pull ==="
             git remote -v
             git fetch origin main
             git reset --hard origin/main
+
+            echo "=== npm ci ==="
             npm ci
+
+            echo "=== prisma generate ==="
             npx prisma generate
+
+            echo "=== next build ==="
+            export NEXT_PRIVATE_DISABLE_RUST_COMPILER=1
             npm run build
-            npx prisma migrate deploy || true
+
+            echo "=== prisma migrate (non bloquant) ==="
+            npx prisma migrate deploy || echo "AVERTISSEMENT: migrate deploy a échoué (DB ou droits)"
+
             echo "=== Déploiement terminé ==="
-            echo "Redémarrez l'app Node.js dans le cPanel si nécessaire."
+            echo "Redémarrez l'app Node.js dans le cPanel."
