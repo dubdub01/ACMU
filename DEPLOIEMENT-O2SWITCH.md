@@ -234,6 +234,27 @@ npm run build
 2. Vérifiez les logs d'erreur
 3. Vérifiez que le port est correct (généralement 3000)
 
+## CI/CD avec GitHub Actions
+
+Le dépôt contient deux workflows dans `.github/workflows/` :
+
+| Workflow | Rôle | Déclencheur |
+|----------|------|-------------|
+| `ci.yml` | `npm ci`, lint, `prisma generate`, `next build` | Chaque push/PR sur `main` |
+| `deploy-o2switch.yml` | SSH → `git pull`, build, migrations | Après CI réussie sur `main` (si activé) |
+
+### Activer le déploiement automatique
+
+1. Sur o2switch : clone du repo dans `~/nodejs-apps/acmu` (ou autre chemin).
+2. GitHub → **Settings** → **Secrets and variables** → **Actions** :
+   - **Secrets** : `O2SWITCH_SSH_HOST`, `O2SWITCH_SSH_USER`, `O2SWITCH_SSH_PRIVATE_KEY` (clé privée SSH, contenu du fichier `id_ed25519` sans mot de passe, ou clé dédiée).
+   - **Variables** : `O2SWITCH_DEPLOY` = `true`
+   - **Variables** (optionnel) : `O2SWITCH_APP_PATH` = `/home/votrecompte/nodejs-apps/acmu`
+3. Les variables d'environnement (`DATABASE_URL`, etc.) restent dans le **cPanel Node.js**, pas dans GitHub.
+4. Onglet **Actions** du dépôt : vérifier que la CI est verte après un `git push`.
+
+Déploiement manuel sans attendre un push : **Actions** → **Deploy o2switch** → **Run workflow**.
+
 ## Support O2Switch
 
 En cas de problème technique avec l'hébergement, contactez le support O2Switch qui pourra vous aider avec la configuration Phusion Passenger.

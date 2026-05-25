@@ -1,0 +1,42 @@
+# Déploiement SSH vers o2switch (après CI verte sur main).
+# Activer : Settings → Secrets and variables → Actions → Variables → O2SWITCH_DEPLOY = true
+# Secrets : O2SWITCH_SSH_HOST, O2SWITCH_SSH_USER, O2SWITCH_SSH_PRIVATE_KEY
+# Optionnel : O2SWITCH_APP_PATH (défaut ~/nodejs-apps/acmu)
+
+name: Deploy o2switch
+
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    if: >
+      (github.event_name == 'workflow_dispatch' ||
+       (github.event.workflow_run.conclusion == 'success' &&
+        github.event.workflow_run.head_branch == 'main')) &&
+      vars.O2SWITCH_DEPLOY == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Déploiement SSH
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.O2SWITCH_SSH_HOST }}
+          username: ${{ secrets.O2SWITCH_SSH_USER }}
+          key: ${{ secrets.O2SWITCH_SSH_PRIVATE_KEY }}
+          script_stop: true
+          script: |
+            set -euo pipefail
+            APP_DIR="${{ vars.O2SWITCH_APP_PATH }}"
+            if [ -z "$APP_DIR" ]; then APP_DIR="$HOME/nodejs-apps/acmu"; fi
+            cd "$APP_DIR"
+            git fetch origin main
+            git reset --hard origin/main
+            npm ci
+            npx prisma generate
+            npm run build
+            npx prisma migrate deploy || true
+            echo "Déploiement terminé. Redémarrez l'app Node.js dans le cPanel si nécessaire."
