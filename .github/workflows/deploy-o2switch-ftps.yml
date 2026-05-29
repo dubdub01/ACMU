@@ -75,7 +75,7 @@ jobs:
           exclude: |
             **/.git*
             **/.github/**
-            **/node_modules/**
+            /node_modules/**
             **/.env
             **/.env.*
             **/.next/dev/**
