@@ -18,6 +18,13 @@ npm ci --omit=dev
 echo "→ prisma generate"
 npx prisma generate
 
+if [ -n "${DATABASE_URL:-}" ]; then
+  echo "→ prisma migrate deploy"
+  npx prisma migrate deploy
+else
+  echo "⚠ DATABASE_URL introuvable — migrations ignorées (exportez-la ou vérifiez node-selector.json)"
+fi
+
 PRISMA_ALIAS_DIR=".next/node_modules/@prisma"
 if [ -d "$PRISMA_ALIAS_DIR" ]; then
   HASH="$(grep -roh '@prisma/client-[a-f0-9]\+' .next/server/chunks 2>/dev/null | head -1 | cut -d/ -f2 || true)"

@@ -1,5 +1,5 @@
 import ContactInfoList from '../components/ContactInfoList';
-import ContactMap from '../components/ContactMap';
+import ContactMapLazy from '../components/ContactMapLazy';
 import Link from 'next/link';
 
 export const metadata = {
@@ -61,7 +61,7 @@ export default function Contact() {
 
           <div>
             <h2 className="text-xl font-bold text-gray-900 mb-4">Nous trouver</h2>
-            <ContactMap />
+            <ContactMapLazy />
           </div>
         </div>
 

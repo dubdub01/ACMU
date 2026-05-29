@@ -1,19 +1,19 @@
 'use client';
 
-import 'leaflet/dist/leaflet.css';
-
 import { ACMU_ADDRESS, ACMU_COORDS, GOOGLE_MAPS_DIRECTIONS_URL, GOOGLE_MAPS_URL } from '@/lib/contact';
-import type { Map as LeafletMap } from 'leaflet';
 import { useEffect, useRef } from 'react';
+
+type LeafletMapInstance = { remove: () => void };
 
 export default function ContactMap() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const mapRef = useRef<LeafletMap | null>(null);
+  const mapRef = useRef<LeafletMapInstance | null>(null);
 
   useEffect(() => {
     let cancelled = false;
 
     async function initMap() {
+      await import('leaflet/dist/leaflet.css');
       const L = (await import('leaflet')).default;
 
       if (cancelled || !containerRef.current || mapRef.current) return;

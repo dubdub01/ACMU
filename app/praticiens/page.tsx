@@ -1,4 +1,5 @@
 import PraticienCard from '@/app/components/PraticienCard';
+import { praticienOrderBy } from '@/lib/praticien-order';
 import { prisma } from '@/lib/prisma';
 import type { Praticien } from '@prisma/client';
 
@@ -29,7 +30,7 @@ export default async function Praticiens() {
 
   try {
     praticiens = await prisma.praticien.findMany({
-      orderBy: { nom: 'asc' },
+      orderBy: praticienOrderBy,
       select: {
         id: true,
         nom: true,

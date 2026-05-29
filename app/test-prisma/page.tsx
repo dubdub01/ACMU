@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { praticienOrderBy } from '@/lib/praticien-order'
 import { prisma } from '@/lib/prisma'
 
 /**
@@ -19,7 +20,7 @@ export default async function TestPrismaPage() {
 
   try {
     praticiens = await prisma.praticien.findMany({
-      orderBy: { nom: 'asc' },
+      orderBy: praticienOrderBy,
       select: {
         id: true,
         nom: true,

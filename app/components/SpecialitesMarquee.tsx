@@ -9,7 +9,6 @@ const SPECIALITES = [
   { name: 'Gynécologue (F)', icon: '👩‍⚕️' },
   { name: 'Neurochirurgie', icon: '🧠' },
   { name: 'ORL', icon: '👂' },
-  { name: 'Pédiatre', icon: '👶' },
   { name: 'Phlébologue', icon: '🩸' },
   { name: 'Psychiatre', icon: '🧘' },
   { name: 'Radiologue', icon: '📷' },

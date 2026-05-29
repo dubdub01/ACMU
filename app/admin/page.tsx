@@ -3,7 +3,8 @@ import { getCurrentUser } from '@/lib/auth';
 import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
 import LogoutButton from '@/app/components/admin/LogoutButton';
-import DeleteButton from '@/app/components/admin/DeleteButton';
+import PraticienAdminList from '@/app/components/admin/PraticienAdminList';
+import { praticienOrderBy } from '@/lib/praticien-order';
 
 export const metadata = {
   title: 'Administration - Centre médical ACMU',
@@ -18,7 +19,7 @@ export default async function AdminDashboard() {
   }
 
   const praticiens = await prisma.praticien.findMany({
-    orderBy: { createdAt: 'desc' },
+    orderBy: praticienOrderBy,
   });
 
   return (
@@ -79,62 +80,15 @@ export default async function AdminDashboard() {
             </Link>
           </div>
         ) : (
-          <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Nom
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Titre
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Spécialité
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Date d'ajout
-                  </th>
-                  <th className="px-6 py-4 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {praticiens.map((praticien) => (
-                  <tr key={praticien.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900">
-                        {praticien.nom}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-600">
-                        {praticien.titre}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-600">
-                        {praticien.specialite || '-'}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {new Date(praticien.createdAt).toLocaleDateString('fr-FR')}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <Link
-                        href={`/admin/praticiens/${praticien.id}`}
-                        className="text-[#479983] hover:text-[#479983]/80 mr-4"
-                      >
-                        Modifier
-                      </Link>
-                      <DeleteButton praticienId={praticien.id} />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <PraticienAdminList
+            praticiens={praticiens.map((p) => ({
+              id: p.id,
+              nom: p.nom,
+              titre: p.titre,
+              specialite: p.specialite,
+              createdAt: p.createdAt.toISOString(),
+            }))}
+          />
         )}
       </main>
     </div>

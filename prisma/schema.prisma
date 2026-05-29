@@ -35,8 +35,10 @@ model Praticien {
   tel         String?  // Numéro de téléphone du praticien ou du secrétariat (optionnel)
   email       String?  // Adresse email de contact du praticien (optionnel)
   urlRdv      String?  // URL de prise de rendez-vous Mobminder (optionnel)
+  ordre       Int      @default(0) // Position d'affichage sur le site (0 = premier)
   createdAt   DateTime @default(now()) // Date de création
   updatedAt   DateTime @updatedAt // Date de dernière modification
 
+  @@index([ordre])
   @@map("praticiens") // Nom de la table dans PostgreSQL
 }

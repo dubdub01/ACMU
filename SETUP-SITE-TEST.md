@@ -64,6 +64,7 @@ cd ~/nodejs-apps/acmu/ACMU
 # Charger DATABASE_URL depuis la config Node.js cPanel
 export DATABASE_URL=$(node -pe "JSON.parse(require('fs').readFileSync(require('os').homedir()+'/.cl.selector/node-selector.json','utf8'))['nodejs-apps/acmu/ACMU'].env_vars.DATABASE_URL")
 
+npx prisma migrate deploy
 npx prisma generate
 node scripts/o2switch-db-check.mjs
 ```
