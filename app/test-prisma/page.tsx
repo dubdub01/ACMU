@@ -1,6 +1,5 @@
 import Link from 'next/link'
-import { praticienOrderBy } from '@/lib/praticien-order'
-import { prisma } from '@/lib/prisma'
+import { findPraticiens } from '@/lib/praticiens-list'
 
 /**
  * Page de test Prisma - Exemple simple
@@ -19,8 +18,7 @@ export default async function TestPrismaPage() {
   let error: string | null = null
 
   try {
-    praticiens = await prisma.praticien.findMany({
-      orderBy: praticienOrderBy,
+    praticiens = await findPraticiens({
       select: {
         id: true,
         nom: true,

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getCurrentUser } from '@/lib/auth'
-import { praticienOrderBy } from '@/lib/praticien-order'
+import { findPraticiens, nextPraticienOrdre } from '@/lib/praticiens-list'
 
 /**
  * GET /api/praticiens
@@ -10,9 +10,7 @@ import { praticienOrderBy } from '@/lib/praticien-order'
  */
 export async function GET() {
   try {
-    const praticiens = await prisma.praticien.findMany({
-      orderBy: praticienOrderBy,
-    })
+    const praticiens = await findPraticiens()
     return NextResponse.json({
       success: true,
       count: praticiens.length,
@@ -53,8 +51,7 @@ export async function POST(request: Request) {
       )
     }
 
-    const { _max } = await prisma.praticien.aggregate({ _max: { ordre: true } })
-    const nextOrdre = (_max.ordre ?? -1) + 1
+    const nextOrdre = await nextPraticienOrdre()
 
     const praticien = await prisma.praticien.create({
       data: {
@@ -67,7 +64,7 @@ export async function POST(request: Request) {
         tel: tel ? String(tel) : null,
         email: email ? String(email) : null,
         urlRdv: urlRdv ? String(urlRdv) : null,
-        ordre: nextOrdre,
+        ...(nextOrdre !== undefined ? { ordre: nextOrdre } : {}),
       },
     })
 

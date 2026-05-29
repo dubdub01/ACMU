@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getCurrentUser } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { isPraticienOrdreEnabled } from '@/lib/praticiens-list';
 
 /**
  * PATCH /api/praticiens/order
@@ -11,6 +12,17 @@ export async function PATCH(request: Request) {
     const user = await getCurrentUser();
     if (!user) {
       return NextResponse.json({ success: false, error: 'Non autorisé' }, { status: 401 });
+    }
+
+    if (!(await isPraticienOrdreEnabled())) {
+      return NextResponse.json(
+        {
+          success: false,
+          error:
+            'Le tri par glisser-déposer nécessite une migration base de données (voir SETUP-SITE-TEST.md).',
+        },
+        { status: 503 },
+      );
     }
 
     const body = await request.json();

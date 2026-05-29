@@ -1,10 +1,9 @@
 import { redirect } from 'next/navigation';
 import { getCurrentUser } from '@/lib/auth';
 import Link from 'next/link';
-import { prisma } from '@/lib/prisma';
 import LogoutButton from '@/app/components/admin/LogoutButton';
 import PraticienAdminList from '@/app/components/admin/PraticienAdminList';
-import { praticienOrderBy } from '@/lib/praticien-order';
+import { findPraticiens, isPraticienOrdreEnabled } from '@/lib/praticiens-list';
 
 export const metadata = {
   title: 'Administration - Centre médical ACMU',
@@ -18,9 +17,18 @@ export default async function AdminDashboard() {
     redirect('/admin/login');
   }
 
-  const praticiens = await prisma.praticien.findMany({
-    orderBy: praticienOrderBy,
-  });
+  const [praticiens, ordreEnabled] = await Promise.all([
+    findPraticiens({
+      select: {
+        id: true,
+        nom: true,
+        titre: true,
+        specialite: true,
+        createdAt: true,
+      },
+    }),
+    isPraticienOrdreEnabled(),
+  ]);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -81,6 +89,7 @@ export default async function AdminDashboard() {
           </div>
         ) : (
           <PraticienAdminList
+            ordreEnabled={ordreEnabled}
             praticiens={praticiens.map((p) => ({
               id: p.id,
               nom: p.nom,

@@ -15,8 +15,10 @@ export type PraticienAdminRow = {
 
 export default function PraticienAdminList({
   praticiens: initial,
+  ordreEnabled = true,
 }: {
   praticiens: PraticienAdminRow[];
+  ordreEnabled?: boolean;
 }) {
   const router = useRouter();
   const [items, setItems] = useState(initial);
@@ -29,6 +31,7 @@ export default function PraticienAdminList({
   }, [initial]);
 
   const persistOrder = async (ordered: PraticienAdminRow[]) => {
+    if (!ordreEnabled) return;
     setSaving(true);
     try {
       const response = await fetch('/api/praticiens/order', {
@@ -92,7 +95,7 @@ export default function PraticienAdminList({
       <p className="px-6 py-3 text-sm text-gray-600 bg-[#67e8cc]/10 border-b border-[#67e8cc]/30">
         {saving ? (
           <span className="text-[#479983] font-medium">Enregistrement de l&apos;ordre…</span>
-        ) : (
+        ) : ordreEnabled ? (
           <>
             Glissez les lignes par la poignée{' '}
             <span className="inline-block align-middle text-gray-400" aria-hidden>
@@ -104,12 +107,17 @@ export default function PraticienAdminList({
             </Link>
             .
           </>
+        ) : (
+          <span className="text-amber-800">
+            Tri par glisser-déposer indisponible : exécutez la migration SQL sur o2switch (voir
+            SETUP-SITE-TEST.md). Affichage par nom en attendant.
+          </span>
         )}
       </p>
       <table className="min-w-full divide-y divide-gray-200">
         <thead className="bg-gray-50">
           <tr>
-            <th className="w-12 px-3 py-4" aria-label="Réordonner" />
+            {ordreEnabled ? <th className="w-12 px-3 py-4" aria-label="Réordonner" /> : null}
             <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Nom
             </th>
@@ -143,24 +151,26 @@ export default function PraticienAdminList({
                   isOver ? 'bg-[#67e8cc]/15 ring-2 ring-inset ring-[#67e8cc]/50' : '',
                 ].join(' ')}
               >
-                <td className="px-3 py-4 text-center">
-                  <div
-                    draggable={!saving}
-                    onDragStart={(e) => {
-                      e.dataTransfer.effectAllowed = 'move';
-                      handleDragStart(praticien.id);
-                    }}
-                    onDragEnd={handleDragEnd}
-                    className="inline-flex cursor-grab active:cursor-grabbing text-gray-400 hover:text-[#479983] p-1 rounded touch-none select-none"
-                    role="button"
-                    tabIndex={0}
-                    aria-label={`Déplacer ${praticien.nom}, position ${index + 1}`}
-                  >
-                    <span className="text-lg leading-none" aria-hidden>
-                      ⠿
-                    </span>
-                  </div>
-                </td>
+                {ordreEnabled ? (
+                  <td className="px-3 py-4 text-center">
+                    <div
+                      draggable={!saving}
+                      onDragStart={(e) => {
+                        e.dataTransfer.effectAllowed = 'move';
+                        handleDragStart(praticien.id);
+                      }}
+                      onDragEnd={handleDragEnd}
+                      className="inline-flex cursor-grab active:cursor-grabbing text-gray-400 hover:text-[#479983] p-1 rounded touch-none select-none"
+                      role="button"
+                      tabIndex={0}
+                      aria-label={`Déplacer ${praticien.nom}, position ${index + 1}`}
+                    >
+                      <span className="text-lg leading-none" aria-hidden>
+                        ⠿
+                      </span>
+                    </div>
+                  </td>
+                ) : null}
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="text-sm font-medium text-gray-900">{praticien.nom}</div>
                   <div className="text-xs text-gray-400">Position {index + 1}</div>

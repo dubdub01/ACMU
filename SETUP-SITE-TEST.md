@@ -84,6 +84,22 @@ Si les tables n’existent pas encore :
 npx prisma migrate deploy
 ```
 
+### Migration `ordre` (tri des praticiens) — erreur « doit être le propriétaire »
+
+Si `migrate deploy` échoue sur `20260529180000_add_praticien_ordre` avec **42501 / doit être le propriétaire** :
+
+1. Exécutez d’abord le SQL de `scripts/o2switch-fix-db-owner.sql` dans **phpPgAdmin** (compte propriétaire `vsup3936`).
+2. Puis en SSH (avec `DATABASE_URL` exportée) :
+
+```bash
+npx prisma migrate deploy
+bash scripts/o2switch-post-deploy.sh
+```
+
+3. Redémarrez Node.js dans cPanel.
+
+Sans cette étape, le site reste utilisable (tri par nom) mais le glisser-déposer admin est désactivé.
+
 ## 4. Créer le compte admin
 
 ```bash
