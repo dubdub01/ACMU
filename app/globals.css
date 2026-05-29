@@ -3,7 +3,8 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  
+  color-scheme: light;
+
   /* Couleurs du logo ACMU */
   --acmu-primary: #67e8cc;      /* Turquoise clair */
   --acmu-secondary: #479983;    /* Vert foncé */
@@ -22,17 +23,30 @@
   --color-acmu-white: var(--acmu-white);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Champs de formulaire : texte lisible même si le OS est en mode sombre */
+input,
+textarea,
+select {
+  color: #111827;
+  background-color: #ffffff;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #9ca3af;
+}
+
+input:-webkit-autofill,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+  -webkit-text-fill-color: #111827;
+  box-shadow: 0 0 0 1000px #ffffff inset;
 }
 
 /* Animation bandeau spécialités */
