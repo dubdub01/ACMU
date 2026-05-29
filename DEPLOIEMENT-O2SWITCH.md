@@ -254,6 +254,12 @@ Le dépôt contient deux workflows dans `.github/workflows/` :
 
 ### Dépannage deploy GitHub Actions
 
+**`FTPError: 550 Can't change directory to .../.next/static/...`** — dossiers `_next/static` avec hash qui changent à chaque build ; le FTP ne doit plus envoyer `.next` (voir workflow actuel). Après déploiement FTPS, lancer en SSH :
+
+```bash
+bash ~/nodejs-apps/acmu/ACMU/scripts/o2switch-post-deploy.sh
+```
+
 **`FTPError: 553 Can't open that file: No such file or directory`** — le fichier `.ftp-deploy-sync-state.json` sur le serveur ne correspond plus aux fichiers réels (souvent après suppression de dossiers, `node_modules`, ou changement manuel en FTP/SSH). **Solution :** supprimer ce fichier sur o2switch puis relancer le workflow :
 
 ```bash
