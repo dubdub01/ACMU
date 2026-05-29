@@ -19,7 +19,7 @@ if [ -d "$PRISMA_ALIAS_DIR" ]; then
   HASH=$(grep -roh '@prisma/client-[a-f0-9]\+' .next/server/chunks 2>/dev/null | head -1 | cut -d/ -f2 || true)
   if [ -n "$HASH" ] && [ ! -e "$PRISMA_ALIAS_DIR/$HASH" ]; then
     echo "→ lien $HASH → @prisma/client"
-    ln -sf ../../../../node_modules/@prisma/client "$PRISMA_ALIAS_DIR/$HASH"
+    ln -sf ../../../node_modules/@prisma/client "$PRISMA_ALIAS_DIR/$HASH"
   fi
 fi
 
