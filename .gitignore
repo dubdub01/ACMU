@@ -17,6 +17,7 @@
 # misc
 .DS_Store
 *.pem
+.ftp-deploy-sync-state.json
 
 # debug
 npm-debug.log*

@@ -48,8 +48,17 @@ jobs:
         run: |
           rm -rf node_modules .git .github
           rm -f .env .env.local .env.*.local
+          # Évite l'erreur FTP 553 si l'état local/serveur est désynchronisé
+          rm -f .ftp-deploy-sync-state.json
           mkdir -p tmp
           date -u +%Y-%m-%dT%H:%M:%SZ > tmp/restart.txt
+
+      - name: Chemin FTP (sans espaces ni retours ligne)
+        run: |
+          DIR="${{ vars.O2SWITCH_FTP_DIR }}"
+          DIR="${DIR:-nodejs-apps/acmu/ACMU/}"
+          DIR="$(printf '%s' "$DIR" | tr -d '\r\n' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
+          echo "FTP_DIR=$DIR" >> "$GITHUB_ENV"
 
       - name: Déploiement FTPS sur o2switch
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
@@ -60,8 +69,9 @@ jobs:
           port: 21
           protocol: ftps
           local-dir: ./
-          server-dir: ./${{ vars.O2SWITCH_FTP_DIR || 'nodejs-apps/acmu/ACMU/' }}
+          server-dir: ./${{ env.FTP_DIR }}
           dangerous-clean-slate: false
+          log-level: minimal
           exclude: |
             **/.git*
             **/.github/**
@@ -69,3 +79,4 @@ jobs:
             **/.env
             **/.env.*
             **/.next/dev/**
+            **/.ftp-deploy-sync-state.json

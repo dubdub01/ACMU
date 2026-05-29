@@ -254,6 +254,15 @@ Le dépôt contient deux workflows dans `.github/workflows/` :
 
 ### Dépannage deploy GitHub Actions
 
+**`FTPError: 553 Can't open that file: No such file or directory`** — le fichier `.ftp-deploy-sync-state.json` sur le serveur ne correspond plus aux fichiers réels (souvent après suppression de dossiers, `node_modules`, ou changement manuel en FTP/SSH). **Solution :** supprimer ce fichier sur o2switch puis relancer le workflow :
+
+```bash
+ssh vsup3936@granite.o2switch.net
+rm -f ~/nodejs-apps/acmu/ACMU/.ftp-deploy-sync-state.json
+```
+
+Le prochain déploiement fera une resynchronisation complète (un peu plus long). Vérifiez aussi que la variable `O2SWITCH_FTP_DIR` vaut exactement `nodejs-apps/acmu/ACMU/` (sans retour à la ligne).
+
 **`ssh.ParsePrivateKey: ssh: no key found`** — le secret `O2SWITCH_SSH_PRIVATE_KEY` est vide ou mal collé. Recréez-le :
 
 ```bash
