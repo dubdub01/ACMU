@@ -21,6 +21,9 @@ export const metadata = {
   description: 'Découvrez notre équipe de praticiens qualifiés au centre médical ACMU.',
 };
 
+// Données en base : ne pas pré-générer la page au build CI (BDD vide → liste figée).
+export const dynamic = 'force-dynamic';
+
 export default async function Praticiens() {
   let praticiens: PraticienListe[] = [];
 
