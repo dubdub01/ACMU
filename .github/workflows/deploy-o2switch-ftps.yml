@@ -65,27 +65,17 @@ jobs:
           FTP_PASS: ${{ secrets.SFTP_PASSWORD }}
           FTP_HOST: ${{ secrets.SFTP_SERVER }}
         run: |
-          # Chemins obsolètes (ex. praticiens.segments après force-dynamic) → 550 si le JSON sync reste.
+          # Chemins obsolètes (ex. praticiens.segments) → 550 si le JSON sync reste. curl uniquement (< 10 s).
           for f in .ftp-deploy-sync-state.json .ftp-deploy-sync-state-v2.json; do
-            curl --ftp-ssl-reqd --ftp-method nocwd -sS \
+            curl --ftp-ssl-reqd --ftp-method nocwd -sS --max-time 30 \
               -u "${FTP_USER}:${FTP_PASS}" \
               "ftp://${FTP_HOST}/${{ env.FTP_DIR }}${f}" \
               -Q "DELE ${f}" 2>/dev/null || true
-            curl --ftp-ssl-reqd --ftp-method nocwd -sS \
+            curl --ftp-ssl-reqd --ftp-method nocwd -sS --max-time 30 \
               -u "${FTP_USER}:${FTP_PASS}" \
               "ftp://${FTP_HOST}/${{ env.FTP_DIR }}" \
               -Q "DELE ${f}" 2>/dev/null || true
           done
-          sudo apt-get update -qq && sudo apt-get install -y -qq lftp >/dev/null
-          lftp -c "
-            set ftp:ssl-force true;
-            set ssl:verify-certificate no;
-            open -u ${FTP_USER},${FTP_PASS} ftps://${FTP_HOST};
-            cd ${{ env.FTP_DIR }};
-            rm -f .ftp-deploy-sync-state.json;
-            rm -f .ftp-deploy-sync-state-v2.json;
-            bye
-          " 2>/dev/null || true
 
       - name: Déploiement FTPS sur o2switch
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
