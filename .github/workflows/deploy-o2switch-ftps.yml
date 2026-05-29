@@ -46,7 +46,7 @@ jobs:
 
       - name: Nettoyage avant envoi FTP
         run: |
-          rm -rf node_modules .git .github .next
+          rm -rf node_modules .git .github
           rm -f .env .env.local .env.*.local .ftp-deploy-sync-state.json prisma.config.ts
           mkdir -p tmp
           date -u +%Y-%m-%dT%H:%M:%SZ > tmp/restart.txt
@@ -84,6 +84,6 @@ jobs:
             /node_modules/**
             **/.env
             **/.env.*
-            **/.next/**
+            **/.next/dev/**
             **/.ftp-deploy-sync-state.json
             **/prisma.config.ts
