@@ -100,6 +100,34 @@ bash scripts/o2switch-post-deploy.sh
 
 Sans cette étape, le site reste utilisable (tri par nom) mais le glisser-déposer admin est désactivé.
 
+### Ajouter la colonne `ordre` à la main (sans changer le propriétaire des tables)
+
+Si `ALTER TABLE … OWNER` est impossible, ajoutez seulement la colonne :
+
+**Option 1 — phpPgAdmin (interface graphique)**  
+Table `praticiens` → **Colonnes** → **Ajouter une colonne** :
+
+| Champ | Valeur |
+|--------|--------|
+| Nom | `ordre` |
+| Type | `integer` |
+| Défaut | `0` |
+| NOT NULL | oui |
+
+**Option 2 — psql (Terminal cPanel / SSH), une commande à la fois**  
+Voir `scripts/o2switch-add-ordre-manual.sql` (étapes A, B, C).
+
+Puis marquer la migration Prisma comme déjà appliquée :
+
+```bash
+cd ~/nodejs-apps/acmu/ACMU
+export DATABASE_URL=$(node -pe "JSON.parse(require('fs').readFileSync(require('os').homedir()+'/.cl.selector/node-selector.json','utf8'))['nodejs-apps/acmu/ACMU'].env_vars.DATABASE_URL")
+npx prisma migrate resolve --applied 20260529180000_add_praticien_ordre
+bash scripts/o2switch-post-deploy.sh
+```
+
+Redémarrer Node.js dans cPanel.
+
 ## 4. Créer le compte admin
 
 ```bash
