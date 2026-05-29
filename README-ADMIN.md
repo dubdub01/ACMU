@@ -14,9 +14,17 @@ npx tsx scripts/create-admin.ts admin@acmu.be monMotDePasseSecurise "Administrat
 ```
 
 ⚠️ **Important :** Assurez-vous que :
-- La base de données PostgreSQL est démarrée (via Docker : `docker-compose up -d`)
-- La variable d'environnement `DATABASE_URL` est correctement configurée dans `.env.local`
+- La base de données PostgreSQL est démarrée (via Docker : `docker compose up -d postgres`)
+- `.env.local` pointe vers Docker : `postgresql://acmu_user:acmu_password@localhost:5432/acmu_db` (pas les identifiants o2switch)
 - Le client Prisma est généré (`npx prisma generate`)
+- Lancez le site avec `npm run dev` (charge `.env.local` et ignore un `DATABASE_URL` exporté dans le shell)
+
+### Erreur `vsup3936_acmu_user` en local
+
+Si Prisma affiche encore l’utilisateur o2switch alors que `.env.local` est correct :
+1. Arrêtez tous les `next dev` (ports 3000/3001).
+2. Dans le terminal : `unset DATABASE_URL` (ou retirez-le de `~/.bashrc`).
+3. `rm -rf .next` puis `npm run dev`.
 
 ## Accès à l'administration
 
