@@ -11,6 +11,18 @@ const nextConfig: NextConfig = {
   
   // Optimisations pour la production
   compress: true,
+
+  // Photos praticiens uploadées en admin (fichiers ajoutés après le build FTP)
+  async rewrites() {
+    return {
+      beforeFiles: [
+        {
+          source: '/images/praticiens/:filename',
+          destination: '/api/praticien-photo/:filename',
+        },
+      ],
+    };
+  },
   
   // Images optimisées
   images: {

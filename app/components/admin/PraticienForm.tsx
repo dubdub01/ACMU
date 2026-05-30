@@ -154,6 +154,17 @@ export default function PraticienForm({ praticien }: PraticienFormProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+
+    if (uploading) {
+      setError('Veuillez attendre la fin du téléchargement de la photo.');
+      return;
+    }
+
+    if (localPreview && !formData.photo?.trim()) {
+      setError('La photo n\'a pas été enregistrée sur le serveur. Réessayez l\'upload.');
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -427,7 +438,7 @@ export default function PraticienForm({ praticien }: PraticienFormProps) {
       <div className="flex gap-4 pt-4">
         <button
           type="submit"
-          disabled={loading}
+          disabled={loading || uploading}
           className="flex-1 bg-[#479983] text-white py-3 px-6 rounded-xl font-semibold hover:bg-[#479983]/90 transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {loading ? 'Enregistrement...' : praticien ? 'Modifier' : 'Créer'}

@@ -69,6 +69,9 @@ export async function POST(request: Request) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
     await writeFile(filePath, buffer);
+    // Lisible par le serveur web / Passenger
+    const { chmod } = await import('fs/promises');
+    await chmod(filePath, 0o644);
 
     // Retourner le chemin public
     const publicPath = `/images/praticiens/${fileName}`;
