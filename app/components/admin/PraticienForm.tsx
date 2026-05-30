@@ -22,7 +22,11 @@ interface PraticienFormProps {
   praticien?: Praticien;
 }
 
+const DEFAULT_PRATICIEN_TEL = '02/726.56.67';
+const DEFAULT_PRATICIEN_EMAIL = 'info@acmu.be';
+
 export default function PraticienForm({ praticien }: PraticienFormProps) {
+  const isCreate = !praticien;
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -38,8 +42,8 @@ export default function PraticienForm({ praticien }: PraticienFormProps) {
     description: praticien?.description || '',
     details: praticien?.details || '',
     photo: praticien?.photo || '',
-    tel: praticien?.tel || '',
-    email: praticien?.email || '',
+    tel: praticien?.tel ?? (isCreate ? DEFAULT_PRATICIEN_TEL : ''),
+    email: praticien?.email ?? (isCreate ? DEFAULT_PRATICIEN_EMAIL : ''),
     urlRdv: praticien?.urlRdv || '',
   });
 
@@ -183,8 +187,8 @@ export default function PraticienForm({ praticien }: PraticienFormProps) {
           description: formData.description || null,
           details: formData.details || null,
           photo: formData.photo || null,
-          tel: formData.tel || null,
-          email: formData.email || null,
+          tel: isCreate ? DEFAULT_PRATICIEN_TEL : formData.tel || null,
+          email: isCreate ? DEFAULT_PRATICIEN_EMAIL : formData.email || null,
           urlRdv: formData.urlRdv || null,
         }),
       });
@@ -297,12 +301,23 @@ export default function PraticienForm({ praticien }: PraticienFormProps) {
             id="tel"
             type="text"
             value={formData.tel}
-            onChange={(e) => setFormData({ ...formData, tel: e.target.value })}
-            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#479983] focus:border-transparent outline-none transition"
+            readOnly={isCreate}
+            onChange={
+              isCreate
+                ? undefined
+                : (e) => setFormData({ ...formData, tel: e.target.value })
+            }
+            className={`w-full px-4 py-3 border border-gray-300 rounded-xl outline-none transition ${
+              isCreate
+                ? 'bg-gray-50 text-gray-600 cursor-default'
+                : 'focus:ring-2 focus:ring-[#479983] focus:border-transparent'
+            }`}
             placeholder="02 726 56 67"
           />
           <p className="mt-1 text-xs text-gray-500">
-            Numéro qui sera affiché dans le menu « Prendre rendez-vous ».
+            {isCreate
+              ? 'Coordonnées ACMU (fixes pour tous les praticiens).'
+              : 'Numéro qui sera affiché dans le menu « Prendre rendez-vous ».'}
           </p>
         </div>
 
@@ -314,12 +329,23 @@ export default function PraticienForm({ praticien }: PraticienFormProps) {
             id="email"
             type="email"
             value={formData.email}
-            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#479983] focus:border-transparent outline-none transition"
-            placeholder="contact@acmu.be"
+            readOnly={isCreate}
+            onChange={
+              isCreate
+                ? undefined
+                : (e) => setFormData({ ...formData, email: e.target.value })
+            }
+            className={`w-full px-4 py-3 border border-gray-300 rounded-xl outline-none transition ${
+              isCreate
+                ? 'bg-gray-50 text-gray-600 cursor-default'
+                : 'focus:ring-2 focus:ring-[#479983] focus:border-transparent'
+            }`}
+            placeholder="info@acmu.be"
           />
           <p className="mt-1 text-xs text-gray-500">
-            Adresse email qui sera affichée dans le menu « Prendre rendez-vous ».
+            {isCreate
+              ? 'Coordonnées ACMU (fixes pour tous les praticiens).'
+              : 'Adresse email qui sera affichée dans le menu « Prendre rendez-vous ».'}
           </p>
         </div>
       </div>
