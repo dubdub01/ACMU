@@ -1,7 +1,8 @@
 import { redirect } from 'next/navigation';
 import { getCurrentUser } from '@/lib/auth';
 import Link from 'next/link';
-import LogoutButton from '@/app/components/admin/LogoutButton';
+import AdminHeader from '@/app/components/admin/AdminHeader';
+import AdminNav from '@/app/components/admin/AdminNav';
 import PraticienAdminList from '@/app/components/admin/PraticienAdminList';
 import { findPraticiens, isPraticienOrdreEnabled } from '@/lib/praticiens-list';
 
@@ -32,33 +33,11 @@ export default async function AdminDashboard() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">
-                Administration ACMU
-              </h1>
-              <p className="text-sm text-gray-600 mt-1">
-                Connecté en tant que {user.email}
-              </p>
-            </div>
-            <div className="flex items-center gap-4">
-              <Link
-                href="/"
-                className="text-gray-600 hover:text-gray-900 font-medium"
-              >
-                Voir le site
-              </Link>
-              <LogoutButton />
-            </div>
-          </div>
-        </div>
-      </header>
+      <AdminHeader userEmail={user.email} />
 
-      {/* Main content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <AdminNav />
+
         {/* Actions */}
         <div className="mb-8 flex items-center justify-between">
           <h2 className="text-3xl font-bold text-gray-900">Praticiens</h2>

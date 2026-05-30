@@ -1,29 +1,8 @@
 'use client';
 
-const SPECIALITES = [
-  { name: 'Généraliste', icon: '🏥' },
-  { name: 'Cardiologue', icon: '❤️' },
-  { name: 'Chirurgien digestif', icon: '⚕️' },
-  { name: 'Dentisterie', icon: '🦷' },
-  { name: 'Diététique', icon: '🥗' },
-  { name: 'Gynécologue (F)', icon: '👩‍⚕️' },
-  { name: 'Neurochirurgie', icon: '🧠' },
-  { name: 'ORL', icon: '👂' },
-  { name: 'Phlébologue', icon: '🩸' },
-  { name: 'Psychiatre', icon: '🧘' },
-  { name: 'Radiologue', icon: '📷' },
-  { name: 'Dentiste', icon: '🦷' },
-  { name: 'Dentiste pédiatrique', icon: '👶🦷' },
-  { name: 'Diététicienne', icon: '🥗' },
-  { name: 'Esthéticienne', icon: '✨' },
-  { name: 'Kinésithérapeutes', icon: '💪' },
-  { name: 'Logopède', icon: '🗣️' },
-  { name: 'Ostéopathes', icon: '🦴' },
-  { name: 'Pédicure médicale', icon: '🦶' },
-  { name: 'Psychologues', icon: '🧠' },
-  { name: 'Infirmier·ère', icon: '💉' },
-  { name: 'Chirurgienne digestive', icon: '⚕️' },
-];
+import { SPECIALITES_MARQUEE } from '@/lib/medical-visuals';
+
+const SPECIALITES = SPECIALITES_MARQUEE;
 
 function MarqueeRow({ direction = 'left' }: { direction?: 'left' | 'right' }) {
   const Card = ({ spec }: { spec: (typeof SPECIALITES)[0] }) => (
