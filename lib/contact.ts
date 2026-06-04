@@ -16,3 +16,4 @@ export const GOOGLE_MAPS_URL =
 
 export const GOOGLE_MAPS_DIRECTIONS_URL =
   'https://www.google.com/maps/dir/?api=1&destination=Rue+Victor+Allard+147,+1180+Uccle,+Belgium';
+

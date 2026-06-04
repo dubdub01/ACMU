@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import EmergencyNotice from './components/EmergencyNotice';
 import Image from 'next/image';
 import SpecialitesMarquee from './components/SpecialitesMarquee';
 import GoogleReviews from './components/GoogleReviews';
@@ -180,17 +181,7 @@ export default function Home() {
                   </div>
                 </div>
                 
-                <div className="flex items-start">
-                  <div className="flex-shrink-0 w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
-                    <span className="text-2xl">🚨</span>
-                  </div>
-                  <div className="ml-4">
-                    <h3 className="font-semibold text-gray-900 mb-1">Urgences</h3>
-                    <a href="tel:112" className="text-red-600 hover:text-red-700 font-semibold">
-                      112
-                    </a>
-                  </div>
-                </div>
+                <EmergencyNotice className="text-sm text-gray-600 pt-2" />
               </div>
             </div>
             

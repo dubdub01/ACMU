@@ -1,5 +1,6 @@
 import ContactInfoList from '../components/ContactInfoList';
 import ContactMapLazy from '../components/ContactMapLazy';
+import EmergencyNotice from '../components/EmergencyNotice';
 import Link from 'next/link';
 
 export const metadata = {
@@ -51,12 +52,12 @@ export default function Contact() {
               </div>
             </div>
 
-            <p className="mt-6 pt-4 border-t border-white/20 text-sm text-white/90">
-              Urgences :{' '}
-              <a href="tel:112" className="font-bold hover:text-[#67e8cc]">
-                112
-              </a>
-            </p>
+            <div className="mt-6 pt-4 border-t border-white/20">
+              <EmergencyNotice
+                className="text-sm text-white/90"
+                linkClassName="font-bold text-white hover:text-[#67e8cc]"
+              />
+            </div>
           </div>
 
           <div>
