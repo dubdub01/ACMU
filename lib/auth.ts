@@ -7,7 +7,7 @@ const SESSION_COOKIE_NAME = 'acmu-admin-session';
 const SESSION_DURATION = 7 * 24 * 60 * 60 * 1000; // 7 jours
 
 /** Cookies Secure uniquement en HTTPS (site de test http://acmu.duboismax.com = false). */
-function useSecureSessionCookie(): boolean {
+function shouldUseSecureSessionCookie(): boolean {
   if (process.env.COOKIE_SECURE === 'true') return true;
   if (process.env.COOKIE_SECURE === 'false') return false;
   return process.env.NEXTAUTH_URL?.startsWith('https://') ?? false;
@@ -77,7 +77,7 @@ export async function createSession(userId: string): Promise<string> {
   const cookieStore = await cookies();
   cookieStore.set(SESSION_COOKIE_NAME, encodeSession({ userId, sessionId }), {
     httpOnly: true,
-    secure: useSecureSessionCookie(),
+    secure: shouldUseSecureSessionCookie(),
     sameSite: 'lax',
     maxAge: SESSION_DURATION / 1000,
     path: '/',

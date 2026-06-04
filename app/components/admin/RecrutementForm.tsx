@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import MedicalVisualPicker from '@/app/components/admin/MedicalVisualPicker';
@@ -137,12 +138,12 @@ export default function RecrutementForm({ recrutement }: RecrutementFormProps) {
         >
           {loading ? 'Enregistrement...' : recrutement ? 'Mettre à jour' : 'Créer l\'offre'}
         </button>
-        <a
+        <Link
           href="/admin/recrutements"
           className="px-8 py-3 rounded-xl font-semibold text-gray-700 border border-gray-300 hover:bg-gray-50 transition"
         >
           Annuler
-        </a>
+        </Link>
       </div>
     </form>
   );
