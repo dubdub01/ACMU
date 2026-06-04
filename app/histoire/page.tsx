@@ -3,7 +3,7 @@ import Image from 'next/image';
 export const metadata = {
   title: 'Histoire du centre - Centre médical ACMU',
   description:
-    'Découvrez l\'histoire du centre médical ACMU à Uccle : un centre pluridisciplinaire moderne de 500 m², ouvert en avril 2021.',
+    'Découvrez l\'histoire du centre médical ACMU à Uccle : un centre pluridisciplinaire moderne, ouvert en avril 2021.',
 };
 
 export default function Histoire() {
@@ -33,13 +33,12 @@ export default function Histoire() {
           <div className="space-y-6 text-gray-700 leading-relaxed text-lg">
             <p>
               Le centre médical <strong className="text-[#479983]">ACMU</strong> (Allard Centre
-              Médical Uccle) a ouvert ses portes en <strong>avril 2021</strong>. Sur plus de{' '}
-              <strong>500 m²</strong>, nous regroupons en un seul lieu de nombreuses spécialités
-              médicales et paramédicales pour vous offrir des soins de qualité, accessibles et
-              coordonnés.
+              Médical Uccle) a ouvert ses portes en <strong>avril 2021</strong>. Nous regroupons
+              en un seul lieu de nombreuses spécialités médicales et paramédicales pour vous
+              offrir des soins de qualité, accessibles et coordonnés.
             </p>
             <p>
-              Notre ambition est simple : permettre à chaque patient — femmes, hommes, enfants et
+              Notre ambition est simple : permettre à chaque patient·e — femmes, hommes, enfants et
               bébés — de bénéficier d&apos;un suivi attentif dans un environnement moderne,
               chaleureux et humain, à Uccle, à deux pas de Forest et Saint-Gilles.
             </p>
@@ -77,13 +76,14 @@ export default function Histoire() {
                 <p>
                   C&apos;est avec fierté que je vous accueille au centre médical ACMU. Notre
                   projet est né du souhait de rapprocher les soins, de faciliter le parcours des
-                  patients et de travailler main dans la main avec une équipe pluridisciplinaire
-                  engagée.
+                  patient·e·s et de travailler main dans la main avec une équipe pluridisciplinaire
+                  engagée·s.
                 </p>
                 <p>
-                  Chaque jour, nous veillons à ce que vous soyez écouté·e, bien informé·e et pris
-                  en charge dans les meilleures conditions. N&apos;hésitez pas à nous contacter pour
-                  toute question ou pour prendre rendez-vous avec l&apos;un de nos praticiens.
+                  Chaque jour, nous veillons à ce que vous soyez écouté·e, bien informé·e et
+                  pris·e en charge dans les meilleures conditions. N&apos;hésitez pas à nous
+                  contacter pour toute question ou pour prendre rendez-vous avec l&apos;un·e de
+                  nos praticien·ne·s.
                 </p>
               </div>
               <p className="mt-6 text-[#479983] font-semibold">
@@ -97,7 +97,7 @@ export default function Histoire() {
           <h2 className="text-2xl md:text-3xl font-bold mb-4">Nos valeurs</h2>
           <p className="text-lg max-w-2xl mx-auto text-white/95 leading-relaxed">
             Proximité, excellence des soins, travail d&apos;équipe et accueil bienveillant
-            guident chacune de nos décisions au service de votre santé.
+            guident chacun·e de nos décisions au service de votre santé.
           </p>
         </div>
       </div>

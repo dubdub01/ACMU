@@ -12,12 +12,15 @@
 # next.js (on accepte de committer le build pour le déploiement o2switch)
 /out/
 .next/dev/
-
+.next/cache/
+.next/trace
+.next/trace-build
 
 # misc
 .DS_Store
 *.pem
 .ftp-deploy-sync-state.json
+.ftp-deploy-sync-state-v2.json
 
 # debug
 npm-debug.log*
@@ -48,4 +51,4 @@ postgres_data/
 *.swp
 *.swo
 
-/app/generated/prisma
+/app/generated/

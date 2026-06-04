@@ -25,6 +25,12 @@ interface PraticienFormProps {
 const DEFAULT_PRATICIEN_TEL = '02/726.56.67';
 const DEFAULT_PRATICIEN_EMAIL = 'info@acmu.be';
 
+/** Chaîne vide → null (les placeholders HTML ne sont jamais envoyés ; seules les vraies valeurs comptent). */
+function trimToNull(value: string): string | null {
+  const trimmed = value.trim();
+  return trimmed === '' ? null : trimmed;
+}
+
 export default function PraticienForm({ praticien }: PraticienFormProps) {
   const isCreate = !praticien;
   const router = useRouter();
@@ -181,15 +187,15 @@ export default function PraticienForm({ praticien }: PraticienFormProps) {
         method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          nom: formData.nom,
-          titre: formData.titre,
-          specialite: formData.specialite || null,
-          description: formData.description || null,
-          details: formData.details || null,
-          photo: formData.photo || null,
-          tel: isCreate ? DEFAULT_PRATICIEN_TEL : formData.tel || null,
-          email: isCreate ? DEFAULT_PRATICIEN_EMAIL : formData.email || null,
-          urlRdv: formData.urlRdv || null,
+          nom: formData.nom.trim(),
+          titre: formData.titre.trim(),
+          specialite: trimToNull(formData.specialite),
+          description: trimToNull(formData.description),
+          details: trimToNull(formData.details),
+          photo: trimToNull(formData.photo),
+          tel: trimToNull(formData.tel),
+          email: trimToNull(formData.email),
+          urlRdv: trimToNull(formData.urlRdv),
         }),
       });
 
@@ -228,7 +234,6 @@ export default function PraticienForm({ praticien }: PraticienFormProps) {
           value={formData.nom}
           onChange={(e) => setFormData({ ...formData, nom: e.target.value })}
           className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#479983] focus:border-transparent outline-none transition"
-          placeholder="Dr. Dupont"
         />
       </div>
 
@@ -243,7 +248,6 @@ export default function PraticienForm({ praticien }: PraticienFormProps) {
           value={formData.titre}
           onChange={(e) => setFormData({ ...formData, titre: e.target.value })}
           className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#479983] focus:border-transparent outline-none transition"
-          placeholder="Médecin généraliste"
         />
       </div>
 
@@ -257,7 +261,6 @@ export default function PraticienForm({ praticien }: PraticienFormProps) {
           value={formData.specialite}
           onChange={(e) => setFormData({ ...formData, specialite: e.target.value })}
           className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#479983] focus:border-transparent outline-none transition"
-          placeholder="Cardiologie"
         />
       </div>
 
@@ -271,7 +274,6 @@ export default function PraticienForm({ praticien }: PraticienFormProps) {
           value={formData.description}
           onChange={(e) => setFormData({ ...formData, description: e.target.value })}
           className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#479983] focus:border-transparent outline-none transition"
-          placeholder="Résumé court affiché sur la carte (2–3 phrases)..."
         />
       </div>
 
@@ -285,7 +287,6 @@ export default function PraticienForm({ praticien }: PraticienFormProps) {
           value={formData.details}
           onChange={(e) => setFormData({ ...formData, details: e.target.value })}
           className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#479983] focus:border-transparent outline-none transition"
-          placeholder="Texte détaillé qui sera affiché dans la fenêtre « En savoir plus »..."
         />
         <p className="mt-1 text-xs text-gray-500">
           Tu peux y mettre le texte complet du praticien (par ex. celui de l'ancien site).
@@ -301,23 +302,13 @@ export default function PraticienForm({ praticien }: PraticienFormProps) {
             id="tel"
             type="text"
             value={formData.tel}
-            readOnly={isCreate}
-            onChange={
-              isCreate
-                ? undefined
-                : (e) => setFormData({ ...formData, tel: e.target.value })
-            }
-            className={`w-full px-4 py-3 border border-gray-300 rounded-xl outline-none transition ${
-              isCreate
-                ? 'bg-gray-50 text-gray-600 cursor-default'
-                : 'focus:ring-2 focus:ring-[#479983] focus:border-transparent'
-            }`}
-            placeholder="02 726 56 67"
+            onChange={(e) => setFormData({ ...formData, tel: e.target.value })}
+            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#479983] focus:border-transparent outline-none transition"
           />
           <p className="mt-1 text-xs text-gray-500">
             {isCreate
-              ? 'Coordonnées ACMU (fixes pour tous les praticiens).'
-              : 'Numéro qui sera affiché dans le menu « Prendre rendez-vous ».'}
+              ? 'Prérempli avec le numéro ACMU ; modifiable si besoin.'
+              : 'Numéro affiché dans le menu « Prendre rendez-vous ».'}
           </p>
         </div>
 
@@ -329,23 +320,13 @@ export default function PraticienForm({ praticien }: PraticienFormProps) {
             id="email"
             type="email"
             value={formData.email}
-            readOnly={isCreate}
-            onChange={
-              isCreate
-                ? undefined
-                : (e) => setFormData({ ...formData, email: e.target.value })
-            }
-            className={`w-full px-4 py-3 border border-gray-300 rounded-xl outline-none transition ${
-              isCreate
-                ? 'bg-gray-50 text-gray-600 cursor-default'
-                : 'focus:ring-2 focus:ring-[#479983] focus:border-transparent'
-            }`}
-            placeholder="info@acmu.be"
+            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#479983] focus:border-transparent outline-none transition"
           />
           <p className="mt-1 text-xs text-gray-500">
             {isCreate
-              ? 'Coordonnées ACMU (fixes pour tous les praticiens).'
-              : 'Adresse email qui sera affichée dans le menu « Prendre rendez-vous ».'}
+              ? 'Prérempli avec l’email ACMU ; modifiable si besoin.'
+              : 'Email affiché dans le menu « Prendre rendez-vous ».'}
           </p>
         </div>
       </div>
@@ -457,7 +438,6 @@ export default function PraticienForm({ praticien }: PraticienFormProps) {
           value={formData.urlRdv}
           onChange={(e) => setFormData({ ...formData, urlRdv: e.target.value })}
           className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#479983] focus:border-transparent outline-none transition"
-          placeholder="https://booking.mobminder.com/praticien"
         />
       </div>
 

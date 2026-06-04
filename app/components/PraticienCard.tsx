@@ -22,6 +22,7 @@ interface PraticienCardProps {
 }
 
 export default function PraticienCard({
+  id,
   nom,
   titre,
   specialite,
@@ -50,6 +51,15 @@ export default function PraticienCard({
   React.useEffect(() => {
     setImgError(false);
   }, [photoSrc]);
+
+  React.useEffect(() => {
+    if (!showDetails) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [showDetails]);
 
   const showImage = photoSrc && !imgError;
   const photoBgClass =
@@ -160,22 +170,32 @@ export default function PraticienCard({
         </div>
       </div>
 
-      {/* Modal "En savoir plus" */}
+      {/* Modal "En savoir plus" — zone scrollable sur mobile */}
       {showDetails && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
-          <div className="bg-white max-w-4xl w-full max-h-[90vh] rounded-3xl shadow-2xl overflow-hidden relative">
+        <div
+          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 sm:px-4 sm:py-6"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby={`praticien-details-${id}`}
+          onClick={() => setShowDetails(false)}
+        >
+          <div
+            className="bg-white w-full sm:max-w-4xl max-h-[92dvh] sm:max-h-[min(90vh,900px)] rounded-t-3xl sm:rounded-3xl shadow-2xl flex flex-col overflow-hidden relative"
+            onClick={(e) => e.stopPropagation()}
+          >
             <button
               type="button"
               onClick={() => setShowDetails(false)}
-              className="absolute top-4 right-4 z-20 inline-flex h-8 w-8 items-center justify-center rounded-full bg-black/40 text-white hover:bg-black/70"
+              className="absolute top-4 right-4 z-20 inline-flex h-9 w-9 items-center justify-center rounded-full bg-black/50 text-white hover:bg-black/70"
               aria-label="Fermer"
             >
               ✕
             </button>
 
-            <div className="flex flex-col md:flex-row">
-              {/* Colonne photo à gauche */}
-              <div className="md:w-5/12 w-full relative">
+            <div className="overflow-y-auto overscroll-contain flex-1 min-h-0 touch-pan-y">
+              <div className="flex flex-col md:flex-row">
+              {/* Colonne photo */}
+              <div className="md:w-5/12 w-full relative h-56 sm:h-64 md:h-auto md:min-h-[320px] shrink-0">
                 <div className={`absolute inset-0 ${photoBgClass}`}>
                   {photoSrc ? (
                     <>
@@ -193,7 +213,10 @@ export default function PraticienCard({
                   )}
                 </div>
                 <div className="absolute bottom-4 left-4 right-4 text-white">
-                  <h3 className="text-2xl md:text-3xl font-bold mb-1 drop-shadow-lg">
+                  <h3
+                    id={`praticien-details-${id}`}
+                    className="text-2xl md:text-3xl font-bold mb-1 drop-shadow-lg"
+                  >
                     {nom}
                   </h3>
                   <p className="text-sm md:text-base font-semibold text-[#e0fff7] drop-shadow">
@@ -207,8 +230,8 @@ export default function PraticienCard({
                 </div>
               </div>
 
-              {/* Colonne texte à droite */}
-              <div className="md:w-7/12 w-full p-6 md:p-8 overflow-y-auto">
+              {/* Colonne texte */}
+              <div className="md:w-7/12 w-full p-6 md:p-8 pb-8">
                 {(details || description) && (
                   <div className="mb-6 space-y-3">
                     <h4 className="text-sm font-semibold text-gray-800">
@@ -268,6 +291,7 @@ export default function PraticienCard({
                     )}
                   </div>
                 )}
+              </div>
               </div>
             </div>
           </div>

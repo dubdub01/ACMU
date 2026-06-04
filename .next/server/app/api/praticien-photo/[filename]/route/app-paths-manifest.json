@@ -1,0 +1,3 @@
+{
+  "/api/praticien-photo/[filename]/route": "app/api/praticien-photo/[filename]/route.js"
+}

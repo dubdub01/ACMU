@@ -17,6 +17,10 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Centre médical ACMU - Uccle",
   description: "Centre médical pluridisciplinaire à Uccle, Bruxelles. Médecine générale, spécialisée, dentisterie et paramédical.",
+  icons: {
+    icon: [{ url: "/images/logo-acmu.png", type: "image/png" }],
+    apple: "/images/logo-acmu.png",
+  },
 };
 
 export default function RootLayout({

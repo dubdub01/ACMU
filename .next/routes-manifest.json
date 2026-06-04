@@ -39,7 +39,13 @@
     }
   ],
   "rewrites": {
-    "beforeFiles": [],
+    "beforeFiles": [
+      {
+        "source": "/images/praticiens/:filename",
+        "destination": "/api/praticien-photo/:filename",
+        "regex": "^/images/praticiens(?:/([^/]+?))(?:/)?$"
+      }
+    ],
     "afterFiles": [],
     "fallback": []
   },
@@ -53,12 +59,36 @@
       "namedRegex": "^/admin/praticiens/(?<nxtPid>[^/]+?)(?:/)?$"
     },
     {
+      "page": "/admin/recrutements/[id]",
+      "regex": "^/admin/recrutements/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/admin/recrutements/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/api/praticien-photo/[filename]",
+      "regex": "^/api/praticien\\-photo/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPfilename": "nxtPfilename"
+      },
+      "namedRegex": "^/api/praticien\\-photo/(?<nxtPfilename>[^/]+?)(?:/)?$"
+    },
+    {
       "page": "/api/praticiens/[id]",
       "regex": "^/api/praticiens/([^/]+?)(?:/)?$",
       "routeKeys": {
         "nxtPid": "nxtPid"
       },
       "namedRegex": "^/api/praticiens/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/api/recrutements/[id]",
+      "regex": "^/api/recrutements/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/recrutements/(?<nxtPid>[^/]+?)(?:/)?$"
     }
   ],
   "staticRoutes": [
@@ -99,6 +129,18 @@
       "namedRegex": "^/admin/praticiens/nouveau(?:/)?$"
     },
     {
+      "page": "/admin/recrutements",
+      "regex": "^/admin/recrutements(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/recrutements(?:/)?$"
+    },
+    {
+      "page": "/admin/recrutements/nouveau",
+      "regex": "^/admin/recrutements/nouveau(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/recrutements/nouveau(?:/)?$"
+    },
+    {
       "page": "/api/auth/login",
       "regex": "^/api/auth/login(?:/)?$",
       "routeKeys": {},
@@ -123,10 +165,28 @@
       "namedRegex": "^/api/praticiens(?:/)?$"
     },
     {
+      "page": "/api/praticiens/order",
+      "regex": "^/api/praticiens/order(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/praticiens/order(?:/)?$"
+    },
+    {
+      "page": "/api/recrutements",
+      "regex": "^/api/recrutements(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/recrutements(?:/)?$"
+    },
+    {
       "page": "/api/upload/image",
       "regex": "^/api/upload/image(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/api/upload/image(?:/)?$"
+    },
+    {
+      "page": "/apple-icon.png",
+      "regex": "^/apple\\-icon\\.png(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/apple\\-icon\\.png(?:/)?$"
     },
     {
       "page": "/contact",
@@ -135,16 +195,16 @@
       "namedRegex": "^/contact(?:/)?$"
     },
     {
-      "page": "/favicon.ico",
-      "regex": "^/favicon\\.ico(?:/)?$",
-      "routeKeys": {},
-      "namedRegex": "^/favicon\\.ico(?:/)?$"
-    },
-    {
       "page": "/histoire",
       "regex": "^/histoire(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/histoire(?:/)?$"
+    },
+    {
+      "page": "/icon.png",
+      "regex": "^/icon\\.png(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/icon\\.png(?:/)?$"
     },
     {
       "page": "/praticiens",
@@ -169,12 +229,6 @@
       "regex": "^/services(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/services(?:/)?$"
-    },
-    {
-      "page": "/test-prisma",
-      "regex": "^/test\\-prisma(?:/)?$",
-      "routeKeys": {},
-      "namedRegex": "^/test\\-prisma(?:/)?$"
     }
   ],
   "dataRoutes": [],

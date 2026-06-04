@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import SpecialitesMarquee from './components/SpecialitesMarquee';
+import GoogleReviews from './components/GoogleReviews';
 
 export default function Home() {
   return (
@@ -27,7 +28,7 @@ export default function Home() {
                 <span className="text-white">notre priorité</span>
               </h1>
               <p className="text-xl md:text-2xl text-white mb-12 max-w-2xl mx-auto lg:mx-0 leading-relaxed drop-shadow-md">
-                Centre médical moderne de 500 m² à Uccle, Bruxelles. 
+                Centre médical moderne à Uccle, Bruxelles.
                 Une équipe pluridisciplinaire dédiée à votre bien-être.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
@@ -47,17 +48,18 @@ export default function Home() {
               </div>
             </div>
             
-            {/* Image principale */}
-            <div className="relative h-[400px] lg:h-[500px] rounded-2xl overflow-hidden shadow-2xl border-4 border-white/30">
+            {/* Image principale — cadre au ratio natif 1024×701 */}
+            <div className="relative w-full rounded-2xl overflow-hidden shadow-2xl border-4 border-white/30">
               <Image
                 src="/images/hero/accueil-reception.jpg"
                 alt="Accueil du centre médical ACMU - réception à Uccle"
-                fill
-                className="object-cover object-center"
+                width={1024}
+                height={701}
+                className="w-full h-auto block"
                 priority
                 sizes="(max-width: 1024px) 100vw, 50vw"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#479983]/20 to-transparent"></div>
+              <div className="absolute inset-0 bg-gradient-to-t from-[#479983]/20 to-transparent pointer-events-none" />
             </div>
           </div>
         </div>
@@ -81,8 +83,8 @@ export default function Home() {
             </div>
             <div className="space-y-4">
               <p className="text-lg text-white leading-relaxed">
-                Le centre médical ACMU a ouvert ses portes <strong className="text-white">en avril 2021</strong>. 
-                C'est un centre pluridisciplinaire de 500 m² qui regroupe plusieurs spécialités 
+                Le centre médical ACMU a ouvert ses portes <strong className="text-white">en avril 2021</strong>.
+                C&apos;est un centre pluridisciplinaire qui regroupe plusieurs spécialités
                 médicales pour vous offrir des soins de qualité dans un seul et même lieu.
               </p>
               <p className="text-lg text-white leading-relaxed">
@@ -136,6 +138,8 @@ export default function Home() {
           </Link>
         </div>
       </section>
+
+      <GoogleReviews />
 
       {/* Contact Section - Design épuré */}
       <section className="py-20 bg-white">

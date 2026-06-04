@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Turbopack : ne pas bundler Prisma (client natif + query engine)
+  serverExternalPackages: ['@prisma/client', 'prisma'],
+
   // Configuration pour O2Switch (Phusion Passenger)
   // O2Switch utilise Node.js natif, pas besoin de mode standalone
   // Mais on peut l'activer si nécessaire pour optimiser

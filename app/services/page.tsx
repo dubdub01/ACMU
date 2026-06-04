@@ -49,51 +49,59 @@ const SERVICES_WITH_PHOTOS: ServiceItem[] = [
   },
 ];
 
-const OTHER_SERVICES: ServiceItem[] = [
+const OTHER_SERVICES_WITH_PHOTOS: ServiceItem[] = [
   {
     title: 'Médecine générale',
     description:
       'Consultations médicales générales et suivi de santé pour toute la famille.',
     icon: '🏥',
+    image: '/images/services/medecine-generale.png',
+    imageAlt: 'Consultation de médecine générale au centre médical ACMU à Uccle',
   },
   {
     title: 'Médecine spécialisée',
     description:
       'Consultations avec nos médecins spécialistes dans différentes disciplines.',
     icon: '👨‍⚕️',
+    image: '/images/services/medecine-specialisee.png',
+    imageAlt: 'Consultation avec un médecin spécialiste au centre médical ACMU',
   },
   {
     title: 'Paramédicaux',
     description:
-      'Kinésithérapie, soins infirmiers et autres thérapies pour votre bien-être.',
+      'Kinésithérapie, ostéopathie, soins infirmiers et autres thérapies pour votre bien-être.',
     icon: '💆',
+    image: '/images/services/paramedicaux.png',
+    imageAlt: 'Séance de kinésithérapie au centre médical ACMU à Uccle',
   },
   {
     title: 'Test PCR',
     description:
       'Tests PCR pour le dépistage COVID-19 et autres analyses virologiques.',
     icon: '🧪',
+    image: '/images/services/test-pcr.png',
+    imageAlt: 'Test PCR au centre médical ACMU à Uccle',
   },
 ];
 
 function ServicePhotoCard({ service }: { service: ServiceItem }) {
   return (
     <article className="group flex flex-col overflow-hidden rounded-2xl bg-white shadow-md border border-gray-100 hover:shadow-xl hover:border-[#67e8cc] transition-all duration-300">
-      <div className="relative aspect-[4/3] w-full bg-gray-100 overflow-hidden">
+      <div className="relative aspect-[4/3] w-full bg-gray-50 overflow-hidden">
         <Image
           src={service.image!}
           alt={service.imageAlt ?? service.title}
           fill
-          className="object-cover transition-transform duration-500 group-hover:scale-105"
-          sizes="(max-width: 768px) 100vw, 50vw"
+          className="object-contain object-center"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
         />
       </div>
-      <div className="p-6 flex flex-col flex-1">
-        <div className="flex items-center gap-3 mb-3">
-          <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#67e8cc]/30 text-xl">
+      <div className="p-4 flex flex-col flex-1">
+        <div className="flex items-center gap-2 mb-2">
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#67e8cc]/30 text-lg">
             {service.icon}
           </span>
-          <h2 className="text-xl font-bold text-gray-900 group-hover:text-[#479983] transition-colors">
+          <h2 className="text-base font-bold text-gray-900 group-hover:text-[#479983] transition-colors leading-tight">
             {service.title}
           </h2>
         </div>
@@ -101,20 +109,6 @@ function ServicePhotoCard({ service }: { service: ServiceItem }) {
           {service.description}
         </p>
       </div>
-    </article>
-  );
-}
-
-function ServiceIconCard({ service }: { service: ServiceItem }) {
-  return (
-    <article className="group bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border-2 border-transparent hover:border-[#67e8cc]">
-      <div className="w-16 h-16 rounded-xl bg-[#67e8cc] flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-        <span className="text-3xl">{service.icon}</span>
-      </div>
-      <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-[#479983] transition-colors">
-        {service.title}
-      </h3>
-      <p className="text-gray-600 leading-relaxed">{service.description}</p>
     </article>
   );
 }
@@ -140,21 +134,10 @@ export default function Services() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-          {SERVICES_WITH_PHOTOS.map((service) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[...SERVICES_WITH_PHOTOS, ...OTHER_SERVICES_WITH_PHOTOS].map((service) => (
             <ServicePhotoCard key={service.title} service={service} />
           ))}
-        </div>
-
-        <div className="mb-8">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 text-center mb-10">
-            Autres services
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {OTHER_SERVICES.map((service) => (
-              <ServiceIconCard key={service.title} service={service} />
-            ))}
-          </div>
         </div>
       </div>
     </div>

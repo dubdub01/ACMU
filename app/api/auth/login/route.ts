@@ -1,36 +1,10 @@
 import { NextResponse } from 'next/server';
-import { appendFileSync, promises as fs } from 'fs';
-import path from 'path';
+import { checkLoginRateLimit } from '@/lib/rate-limit';
 
 export const runtime = 'nodejs';
 
-// /tmp est en général inscriptible sur les hébergeurs (Passenger, cPanel)
-const LOG_FILE = path.join('/tmp', 'acmu-login-debug.log');
-
-// Log au chargement du module (auth importé plus bas en dynamique) pour savoir si la route est atteinte
-try {
-  appendFileSync(LOG_FILE, `[${new Date().toISOString()}] login route module loaded\n`, 'utf8');
-} catch {
-  // ignore
-}
-
-async function logLoginError(message: string, error: unknown) {
-  try {
-    const ts = new Date().toISOString();
-    const details =
-      error instanceof Error
-        ? `${error.name}: ${error.message}\n${error.stack ?? ''}`
-        : String(error);
-    const line = `[${ts}] ${message}\n${details}\n\n`;
-    await fs.appendFile(LOG_FILE, line, 'utf8');
-  } catch {
-    // on ignore les erreurs de log pour ne pas casser la route
-  }
-}
-
 export async function POST(request: Request) {
   try {
-    await logLoginError('POST /api/auth/login reçu', { cwd: process.cwd(), home: process.env.HOME });
     const body = await request.json();
     const { email, password } = body;
 
@@ -41,7 +15,23 @@ export async function POST(request: Request) {
       );
     }
 
-    // Import dynamique pour que l'erreur éventuelle (ex: Prisma) soit loguée dans notre catch
+    const rateLimit = checkLoginRateLimit(request, String(email));
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        {
+          success: false,
+          error:
+            'Trop de tentatives de connexion. Réessayez dans quelques minutes.',
+        },
+        {
+          status: 429,
+          headers: {
+            'Retry-After': String(rateLimit.retryAfterSec),
+          },
+        },
+      );
+    }
+
     const { verifyCredentials, createSession } = await import('@/lib/auth');
     const user = await verifyCredentials(email, password);
     if (!user) {
@@ -62,9 +52,7 @@ export async function POST(request: Request) {
       },
     });
   } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    console.error('Erreur login:', message);
-    await logLoginError('Erreur login', error);
+    console.error('Erreur login:', error instanceof Error ? error.message : error);
     return NextResponse.json(
       { success: false, error: 'Erreur lors de la connexion' },
       { status: 500 }

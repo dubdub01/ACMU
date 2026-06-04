@@ -1,3 +1,4 @@
+import { createHmac, timingSafeEqual } from 'crypto';
 import { cookies } from 'next/headers';
 import { prisma } from './prisma';
 import * as bcrypt from 'bcryptjs';
@@ -12,6 +13,56 @@ function useSecureSessionCookie(): boolean {
   return process.env.NEXTAUTH_URL?.startsWith('https://') ?? false;
 }
 
+function getSessionSecret(): string {
+  const secret = process.env.NEXTAUTH_SECRET;
+  if (!secret || secret.length < 16) {
+    throw new Error('NEXTAUTH_SECRET manquant ou trop court (minimum 16 caractères)');
+  }
+  return secret;
+}
+
+function encodeSession(payload: { userId: string; sessionId: string }): string {
+  const data = JSON.stringify(payload);
+  const sig = createHmac('sha256', getSessionSecret()).update(data).digest('base64url');
+  return `${Buffer.from(data, 'utf8').toString('base64url')}.${sig}`;
+}
+
+function decodeSession(value: string): { userId: string; sessionId: string } | null {
+  const dot = value.lastIndexOf('.');
+  if (dot < 0) return null;
+
+  const dataB64 = value.slice(0, dot);
+  const sig = value.slice(dot + 1);
+
+  let data: string;
+  try {
+    data = Buffer.from(dataB64, 'base64url').toString('utf8');
+  } catch {
+    return null;
+  }
+
+  const expected = createHmac('sha256', getSessionSecret()).update(data).digest('base64url');
+  try {
+    const sigBuf = Buffer.from(sig);
+    const expectedBuf = Buffer.from(expected);
+    if (sigBuf.length !== expectedBuf.length || !timingSafeEqual(sigBuf, expectedBuf)) {
+      return null;
+    }
+  } catch {
+    return null;
+  }
+
+  try {
+    const parsed = JSON.parse(data) as { userId?: unknown; sessionId?: unknown };
+    if (typeof parsed.userId !== 'string' || typeof parsed.sessionId !== 'string') {
+      return null;
+    }
+    return { userId: parsed.userId, sessionId: parsed.sessionId };
+  } catch {
+    return null;
+  }
+}
+
 export interface SessionUser {
   id: string;
   email: string;
@@ -23,10 +74,8 @@ export interface SessionUser {
  */
 export async function createSession(userId: string): Promise<string> {
   const sessionId = crypto.randomUUID();
-  // En production, on stockerait la session en base de données
-  // Pour simplifier, on utilise juste un cookie signé avec l'ID utilisateur
   const cookieStore = await cookies();
-  cookieStore.set(SESSION_COOKIE_NAME, JSON.stringify({ userId, sessionId }), {
+  cookieStore.set(SESSION_COOKIE_NAME, encodeSession({ userId, sessionId }), {
     httpOnly: true,
     secure: useSecureSessionCookie(),
     sameSite: 'lax',
@@ -44,12 +93,16 @@ export async function getCurrentUser(): Promise<SessionUser | null> {
   try {
     const cookieStore = await cookies();
     const sessionCookie = cookieStore.get(SESSION_COOKIE_NAME);
-    
+
     if (!sessionCookie?.value) {
       return null;
     }
 
-    const session = JSON.parse(sessionCookie.value);
+    const session = decodeSession(sessionCookie.value);
+    if (!session) {
+      return null;
+    }
+
     const user = await prisma.user.findUnique({
       where: { id: session.userId },
       select: {

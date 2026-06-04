@@ -55,7 +55,11 @@ export default function RecrutementForm({ recrutement }: RecrutementFormProps) {
       const response = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          titre: formData.titre.trim(),
+          description: formData.description.trim(),
+          image: formData.image,
+        }),
       });
 
       const data = await response.json();
@@ -94,7 +98,6 @@ export default function RecrutementForm({ recrutement }: RecrutementFormProps) {
           value={formData.titre}
           onChange={(e) => setFormData({ ...formData, titre: e.target.value })}
           className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#479983] focus:border-transparent outline-none transition"
-          placeholder="Ex. Dermatologue"
         />
       </div>
 
@@ -109,7 +112,6 @@ export default function RecrutementForm({ recrutement }: RecrutementFormProps) {
           value={formData.description}
           onChange={(e) => setFormData({ ...formData, description: e.target.value })}
           className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#479983] focus:border-transparent outline-none transition"
-          placeholder="Texte affiché sur la page Nous recrutons..."
         />
       </div>
 

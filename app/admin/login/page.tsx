@@ -53,7 +53,7 @@ export default function AdminLogin() {
         </div>
 
         <div className="bg-white rounded-2xl shadow-xl p-8">
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6" autoComplete="off">
             {error && (
               <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
                 {error}
@@ -66,12 +66,13 @@ export default function AdminLogin() {
               </label>
               <input
                 id="email"
+                name="email"
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                autoComplete="off"
                 className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#479983] focus:border-transparent outline-none transition"
-                placeholder="admin@acmu.be"
               />
             </div>
 
@@ -81,12 +82,13 @@ export default function AdminLogin() {
               </label>
               <input
                 id="password"
+                name="password"
                 type="password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                autoComplete="new-password"
                 className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#479983] focus:border-transparent outline-none transition"
-                placeholder="••••••••"
               />
             </div>
 
