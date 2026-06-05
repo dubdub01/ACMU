@@ -54,7 +54,7 @@ export default function Histoire() {
           <div className="grid md:grid-cols-2 gap-0">
             <div className="relative aspect-[4/5] md:aspect-auto md:min-h-[420px] bg-gray-100">
               <Image
-                src="/images/histoire/directrice.png"
+                src="/images/histoire/directrice-celine.png"
                 alt="Céline Abousleiman, directrice du centre médical ACMU à Uccle"
                 fill
                 className="object-cover object-top"

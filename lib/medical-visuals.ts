@@ -43,7 +43,6 @@ const MARQUEE_ENTRIES: { name: string; icon: string }[] = [
   { name: 'Pédicure médicale', icon: '🦶' },
   { name: 'Psychologues', icon: '🧠' },
   { name: 'Infirmier·ère', icon: '💉' },
-  { name: 'Chirurgienne digestive', icon: '⚕️' },
 ];
 
 const SERVICE_PHOTOS: { label: string; image: string }[] = [
