@@ -1,10 +1,12 @@
 import Image from 'next/image';
+import { buildPageMetadata } from '@/lib/site-seo';
 
-export const metadata = {
+export const metadata = buildPageMetadata({
   title: 'Nos services - Centre médical ACMU',
   description:
     'Découvrez tous les services proposés par le centre médical ACMU : médecine générale, spécialisée, dentisterie, paramédicaux, prise de sang, tests PCR, épilation laser, électrolyse.',
-};
+  path: '/services',
+});
 
 type ServiceItem = {
   title: string;

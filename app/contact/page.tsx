@@ -2,12 +2,14 @@ import ContactInfoList from '../components/ContactInfoList';
 import ContactMapLazy from '../components/ContactMapLazy';
 import EmergencyNotice from '../components/EmergencyNotice';
 import Link from 'next/link';
+import { buildPageMetadata } from '@/lib/site-seo';
 
-export const metadata = {
+export const metadata = buildPageMetadata({
   title: 'Contact - Centre médical ACMU',
   description:
     'Contactez le centre médical ACMU à Uccle. Adresse, téléphone, horaires, prise de sang et plan interactif.',
-};
+  path: '/contact',
+});
 
 const FACEBOOK_URL =
   'https://www.facebook.com/p/Allard-Centre-M%C3%A9dical-Uccle-100078924544744/';

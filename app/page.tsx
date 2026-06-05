@@ -3,10 +3,13 @@ import EmergencyNotice from './components/EmergencyNotice';
 import Image from 'next/image';
 import SpecialitesMarquee from './components/SpecialitesMarquee';
 import GoogleReviews from './components/GoogleReviews';
+import JsonLd from './components/JsonLd';
+import { getOrganizationJsonLd } from '@/lib/organization-schema';
 
 export default function Home() {
   return (
     <div className="min-h-screen">
+      <JsonLd data={getOrganizationJsonLd()} />
       {/* Hero Section - Design moderne et professionnel */}
       <section className="relative bg-[#67e8cc] py-24 lg:py-32 overflow-hidden">
         {/* Image en arrière-plan */}

@@ -1,5 +1,6 @@
 import PraticienCard from '@/app/components/PraticienCard';
 import { findPraticiens } from '@/lib/praticiens-list';
+import { buildPageMetadata } from '@/lib/site-seo';
 import type { Praticien } from '@prisma/client';
 
 type PraticienListe = Pick<
@@ -16,10 +17,11 @@ type PraticienListe = Pick<
   | 'urlRdv'
 >;
 
-export const metadata = {
+export const metadata = buildPageMetadata({
   title: 'Nos praticiens - Centre médical ACMU',
   description: 'Découvrez notre équipe de praticiens qualifiés au centre médical ACMU.',
-};
+  path: '/praticiens',
+});
 
 // Données en base : ne pas pré-générer la page au build CI (BDD vide → liste figée).
 export const dynamic = 'force-dynamic';

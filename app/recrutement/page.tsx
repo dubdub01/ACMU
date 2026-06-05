@@ -1,14 +1,16 @@
 import Link from 'next/link';
 import RecrutementVisual from '@/app/components/RecrutementVisual';
 import { findRecrutements } from '@/lib/recrutements-list';
+import { buildPageMetadata } from '@/lib/site-seo';
 
 export const dynamic = 'force-dynamic';
 
-export const metadata = {
+export const metadata = buildPageMetadata({
   title: 'Nous recrutons - Centre médical ACMU',
   description:
-    'Rejoignez l\'équipe du centre médical ACMU. Découvrez nos postes disponibles.',
-};
+    "Rejoignez l'équipe du centre médical ACMU. Découvrez nos postes disponibles.",
+  path: '/recrutement',
+});
 
 export default async function Recrutement() {
   let postes: Awaited<ReturnType<typeof findRecrutements>> = [];

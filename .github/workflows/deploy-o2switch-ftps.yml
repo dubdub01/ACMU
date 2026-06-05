@@ -25,6 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DATABASE_URL: postgresql://build:build@127.0.0.1:5432/build
+      SITE_URL: https://acmu.be
       NEXTAUTH_URL: https://acmu.be
       NEXTAUTH_SECRET: deploy-build-secret-32chars-min
       NEXT_PRIVATE_DISABLE_RUST_COMPILER: "1"

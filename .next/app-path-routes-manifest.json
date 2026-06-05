@@ -26,5 +26,6 @@
   "/praticiens/page": "/praticiens",
   "/recrutement/page": "/recrutement",
   "/robots.txt/route": "/robots.txt",
-  "/services/page": "/services"
+  "/services/page": "/services",
+  "/sitemap.xml/route": "/sitemap.xml"
 }

@@ -1,10 +1,12 @@
 import Image from 'next/image';
+import { buildPageMetadata } from '@/lib/site-seo';
 
-export const metadata = {
+export const metadata = buildPageMetadata({
   title: 'Histoire du centre - Centre médical ACMU',
   description:
-    'Découvrez l\'histoire du centre médical ACMU à Uccle : un centre pluridisciplinaire moderne, ouvert en avril 2021.',
-};
+    "Découvrez l'histoire du centre médical ACMU à Uccle : un centre pluridisciplinaire moderne, ouvert en avril 2021.",
+  path: '/histoire',
+});
 
 export default function Histoire() {
   return (
