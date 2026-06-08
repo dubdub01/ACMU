@@ -16,42 +16,7 @@ type ServiceItem = {
   imageAlt?: string;
 };
 
-const SERVICES_WITH_PHOTOS: ServiceItem[] = [
-  {
-    title: 'Dentisterie',
-    description:
-      'Soins dentaires complets : consultations, soins préventifs, traitements et suivi dentaire pour toute la famille.',
-    icon: '🦷',
-    image: '/images/services/dentisterie.png',
-    imageAlt: 'Cabinet dentaire au centre médical ACMU à Uccle',
-  },
-  {
-    title: 'Prise de sang',
-    description:
-      "Analyses médicales et prélèvements sanguins dans un environnement professionnel et rassurant.",
-    icon: '🩸',
-    image: '/images/services/prise-de-sang.png',
-    imageAlt: 'Prise de sang au centre médical ACMU',
-  },
-  {
-    title: 'Épilation laser',
-    description:
-      "Épilation laser Dépil Beauté : traitements modernes et efficaces pour une épilation durable.",
-    icon: '✨',
-    image: '/images/services/epilation-laser.png',
-    imageAlt: 'Épilation laser au centre médical ACMU',
-  },
-  {
-    title: 'Électrolyse',
-    description:
-      "Électrolyse et soins esthétiques Pipiù Beauté, réalisés par des professionnel·le·s expérimenté·e·s.",
-    icon: '⚡',
-    image: '/images/services/electrolyse.png',
-    imageAlt: "Appareil d'électrolyse au centre médical ACMU",
-  },
-];
-
-const OTHER_SERVICES_WITH_PHOTOS: ServiceItem[] = [
+const SERVICES: ServiceItem[] = [
   {
     title: 'Médecine générale',
     description:
@@ -77,12 +42,44 @@ const OTHER_SERVICES_WITH_PHOTOS: ServiceItem[] = [
     imageAlt: 'Séance de kinésithérapie au centre médical ACMU à Uccle',
   },
   {
+    title: 'Dentisterie',
+    description:
+      'Soins dentaires complets : consultations, soins préventifs, traitements et suivi dentaire pour toute la famille.',
+    icon: '🦷',
+    image: '/images/services/dentisterie.png',
+    imageAlt: 'Cabinet dentaire au centre médical ACMU à Uccle',
+  },
+  {
+    title: 'Prise de sang',
+    description:
+      "Analyses médicales et prélèvements sanguins dans un environnement professionnel et rassurant.",
+    icon: '🩸',
+    image: '/images/services/prise-de-sang.png',
+    imageAlt: 'Prise de sang au centre médical ACMU',
+  },
+  {
     title: 'Test PCR',
     description:
       'Tests PCR pour le dépistage COVID-19 et autres analyses virologiques.',
     icon: '🧪',
     image: '/images/services/test-pcr.png',
     imageAlt: 'Test PCR au centre médical ACMU à Uccle',
+  },
+  {
+    title: 'Épilation laser',
+    description:
+      "Épilation laser Dépil Beauté : traitements modernes et efficaces pour une épilation durable.",
+    icon: '✨',
+    image: '/images/services/epilation-laser.png',
+    imageAlt: 'Épilation laser au centre médical ACMU',
+  },
+  {
+    title: 'Électrolyse',
+    description:
+      "Électrolyse et soins esthétiques Pipiù Beauté, réalisés par des professionnel·le·s expérimenté·e·s.",
+    icon: '⚡',
+    image: '/images/services/electrolyse.png',
+    imageAlt: "Appareil d'électrolyse au centre médical ACMU",
   },
 ];
 
@@ -137,7 +134,7 @@ export default function Services() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {[...SERVICES_WITH_PHOTOS, ...OTHER_SERVICES_WITH_PHOTOS].map((service) => (
+          {SERVICES.map((service) => (
             <ServicePhotoCard key={service.title} service={service} />
           ))}
         </div>
